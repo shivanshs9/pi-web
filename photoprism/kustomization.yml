@@ -6,3 +6,4 @@ namespace: photoprism
 resources:
   - namespace.yml
   - mariadb
+  - app

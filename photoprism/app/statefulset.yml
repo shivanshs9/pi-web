@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: app-photoprism
+spec:
+  serviceName: svc-app-photoprism
+  podManagementPolicy: Parallel
+  template:
+    spec:
+      containers:
+        - name: app
+          image: photoprism/photoprism:arm64
+          workingDir: "/photoprism"
+          ports:
+            - containerPort: 2342
+              name: http
+          envFrom:
+            - configMapRef:
+                name: cm-app-photoprism
+            - secretRef:
+                name: sec-app-photoprism
+          resources:
+            requests:
+              cpu: 200m
+              memory: 1Gi
+            limits:
+              cpu: 600m
+              memory: 4Gi
+          readinessProbe:
+            httpGet:
+              path: /api/v1/status
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 6
+          volumeMounts:
+            - mountPath: /photoprism/originals/Shivansh
+              name: data-originals
+              subPath: Shivansh
+            - mountPath: /photoprism/storage
+              name: data-photoprism
+              subPath: storage
+      volumes:
+        - name: data-originals
+          hostPath:
+            path: /mnt/storage
+        - name: data-photoprism
+          hostPath:
+            path: /mnt/data1/photoprism
