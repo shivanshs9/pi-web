@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db-mariadb
+spec:
+  serviceName: svc-db-mariadb
+  template:
+    spec:
+      containers:
+        - name: app
+          image: arm64v8/mariadb:10.8
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - configMapRef:
+                name: cm-db-mariadb
+            - secretRef:
+                name: sec-db-mariadb
+          args:
+            - mysqld
+            - --innodb-buffer-pool-size=256M
+            - --transaction-isolation=READ-COMMITTED
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
+            - --max-connections=512
+            - --innodb-rollback-on-timeout=OFF
+            - --innodb-lock-wait-timeout=120
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: data-db-mariadb
+      volumes:
+        - name: data-db-mariadb
+          hostPath:
+            path: /mnt/data1/photoprism/database
