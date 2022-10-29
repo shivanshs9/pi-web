@@ -1,0 +1,30 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: internal-photos
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`thefaker`)
+      kind: Rule
+      services:
+        - name: svc-app-photoprism
+          port: http
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: public-photos
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`pi.shivanshs9.me`)
+      kind: Rule
+      services:
+        - name: svc-app-photoprism
+          port: http
+  tls:
+    secretName: tls-pi-shivanshs9-me
