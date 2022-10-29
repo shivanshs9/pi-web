@@ -5,6 +5,7 @@ resources:
   - statefulset.yml
   - service.yml
   - config.yml
+  - cron-index.yml
 
 generators:
   - generator.yml

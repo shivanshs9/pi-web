@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: photoprism-index
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: photprism
+              image: photoprism/photoprism:arm64
+              workingDir: "/photoprism"
+              envFrom:
+                - configMapRef:
+                    name: cm-app-photoprism
+                - secretRef:
+                    name: sec-app-photoprism
+              args:
+                - photoprism
+                - index
+                - --cleanup
+              resources:
+                requests:
+                  cpu: 600m
+                  memory: 1Gi
+                limits:
+                  cpu: 1200m
+                  memory: 3Gi
+              volumeMounts:
+                - mountPath: /photoprism/originals/Shivansh
+                  name: data-originals
+                  subPath: Shivansh
+                - mountPath: /photoprism/storage
+                  name: data-photoprism
+                  subPath: storage
+          volumes:
+            - name: data-originals
+              hostPath:
+                path: /mnt/storage
+            - name: data-photoprism
+              hostPath:
+                path: /mnt/data1/photoprism
