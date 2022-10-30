@@ -24,9 +24,9 @@ done
 
 find "$SCRIPTPATH" -maxdepth 1 -type d ! -path . -print | while read path; do
 	[[ ! -f $path/$CHECKFILE ]] && continue
-    dir=$(basename $path)
+  dir=$(basename $path)
 	echo "[$dir] Found helm chart CRD for k3s."
-    [[ -d $MANIFESTS_PATH/$dir ]] && $SUDO rm -r $MANIFESTS_PATH/$dir
-    $SUDO mkdir -p $MANIFESTS_PATH/$dir
-    (cd $path && $SUDO find . -type f ! -path ./$CHECKFILE -exec ln -f $path/{} $MANIFESTS_PATH/$dir/{} \;)
+  $SUDO [ -d $MANIFESTS_PATH/$dir ] && $SUDO rm -r $MANIFESTS_PATH/$dir
+  $SUDO mkdir -p $MANIFESTS_PATH/$dir
+  (cd $path && $SUDO find . -type f ! -path ./$CHECKFILE -exec ln -f $path/{} $MANIFESTS_PATH/$dir/{} \;)
 done
