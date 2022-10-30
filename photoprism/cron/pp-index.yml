@@ -4,6 +4,7 @@ metadata:
   name: photoprism-index
 spec:
   schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
