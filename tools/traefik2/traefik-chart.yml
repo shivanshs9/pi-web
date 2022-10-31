@@ -32,3 +32,8 @@ spec:
       #   metallb.universe.tf/loadBalancerIPs: ""
       spec:
         ipFamilyPolicy: RequireDualStack
+
+    ports:
+      websecure:
+        forwardedHeaders:
+          insecure: true
