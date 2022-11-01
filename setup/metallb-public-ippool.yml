@@ -1,7 +1,7 @@
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
 metadata:
-  name: prod-ips
+  name: public-ips
   namespace: metallb-system
   annotations:
     reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
@@ -9,4 +9,5 @@ metadata:
     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
 spec:
   addresses:
-    - $IPv6_ADDRESS
+    - 192.168.1.69/32
+    - $IPv6_CIDR

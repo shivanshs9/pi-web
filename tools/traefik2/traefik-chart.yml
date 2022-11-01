@@ -29,7 +29,7 @@ spec:
       enabled: true
       type: LoadBalancer
       annotations:
-        metallb.universe.tf/address-pool: "prod-ips"
+        metallb.universe.tf/address-pool: "public-ips"
       spec:
         ipFamilyPolicy: RequireDualStack
 
