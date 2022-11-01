@@ -1,0 +1,12 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: prod-ips
+  namespace: metallb-system
+  annotations:
+    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+    reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: traefik
+    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+spec:
+  addresses:
+    - $IPv6_ADDRESS

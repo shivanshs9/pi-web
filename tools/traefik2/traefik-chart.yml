@@ -28,8 +28,8 @@ spec:
     service:
       enabled: true
       type: LoadBalancer
-      # annotations:
-      #   metallb.universe.tf/loadBalancerIPs: ""
+      annotations:
+        metallb.universe.tf/address-pool: "prod-ips"
       spec:
         ipFamilyPolicy: RequireDualStack
 

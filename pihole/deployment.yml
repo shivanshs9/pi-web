@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pihole
+spec:
+  replicas: 1
+  template:
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          # upstream DNS used by pihole.
+          - 1.1.1.1
+      containers:
+        - name: pihole
+          image: pihole/pihole:2022.10
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "Asia/Kolkata"
+            - name: WEBPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: WEBPASSWORD
+                  name: sec-pihole
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 53
+              protocol: TCP
+            - containerPort: 53
+              protocol: UDP
+            - containerPort: 67
+              protocol: UDP
+            - containerPort: 80
+              protocol: TCP
+              name: http
+            - containerPort: 443
+              protocol: TCP
+              name: https
+          volumeMounts:
+            - name: etc
+              mountPath: /etc/pihole
+            - name: dnsmasq
+              mountPath: /etc/dnsmasq.d
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 200m
+      volumes:
+        - name: etc
+          hostPath:
+            path: /etc/pihole
+            type: Directory
+        - name: dnsmasq
+          hostPath:
+            path: /etc/dnsmasq.d
+            type: Directory
