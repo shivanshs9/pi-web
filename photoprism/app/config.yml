@@ -30,6 +30,7 @@ data:
   PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
   PHOTOPRISM_SITE_DESCRIPTION: "Fuck Google?!" # meta site description
   PHOTOPRISM_SITE_AUTHOR: "TheFaker" # meta site author
+  PHOTOPRISM_SPONSOR: "true"
   ## Run/install on first startup (options: update, gpu, tensorflow, davfs, clean):
   # PHOTOPRISM_INIT: "update clean"
   ## Hardware Video Transcoding (for sponsors only due to high maintenance and support costs):
