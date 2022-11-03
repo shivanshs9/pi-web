@@ -1,0 +1,40 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: grafana
+  namespace: kube-system
+spec:
+  chart: grafana
+  repo: https://grafana.github.io/helm-charts
+  targetNamespace: monitoring
+  version: 6.43.3
+  valuesContent: |-
+    ingress:
+      enabled: true
+      hosts: [ "pi.shivanshs9.me" ]
+      path: "/grafana"
+      tls:
+        - hosts:
+            - pi.shivanshs9.me
+          secretName: tls-pi-shivanshs9-me
+    grafana.ini:
+      server:
+        root_url: https://pi.shivanshs9.me/grafana
+        serve_from_sub_path: true
+
+    envFromSecret: sec-influxdb
+
+    datasources:
+      datasources.yaml:
+        apiVersion: 1
+        datasources:
+          - name: InfluxDB
+            type: influxdb
+            access: proxy
+            url: $INFLUXDB_URL
+            secureJsonData:
+              token: $INFLUXDB_TOKEN
+            jsonData:
+              version: Flux
+              organization: "IIT BHU"
+              defaultBucket: "TheFaker"

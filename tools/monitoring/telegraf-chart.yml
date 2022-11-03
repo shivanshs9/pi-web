@@ -1,0 +1,69 @@
+apiVersion: helm.cattle.io/v1
+kind: HelmChart
+metadata:
+  name: telegraf
+  namespace: kube-system
+spec:
+  chart: telegraf-ds
+  repo: https://helm.influxdata.com/
+  targetNamespace: monitoring
+  version: 1.1.5
+  valuesContent: |-
+    image:
+      tag: "1.24" # alpine won't work in arm64
+
+    envFromSecret: "sec-influxdb"
+
+    override_config:
+      toml: ~
+      toml: |+
+        [agent]
+          collection_jitter = "0s"
+          debug = false
+          flush_interval = "10s"
+          flush_jitter = "0s"
+          hostname = "$HOSTNAME"
+          interval = "10s"
+          logfile = ""
+          metric_batch_size = 1000
+          metric_buffer_limit = 10000
+          omit_hostname = false
+          precision = ""
+          quiet = false
+          round_interval = true
+
+        [[inputs.diskio]]
+        [[inputs.kernel]]
+        [[inputs.mem]]
+        [[inputs.net]]
+        [[inputs.processes]]
+        [[inputs.swap]]
+        [[inputs.system]]
+
+        [[inputs.cpu]]
+        percpu = true
+        totalcpu = true
+        collect_cpu_time = false
+        report_active = false
+
+        [[inputs.disk]]
+        ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
+        [[inputs.docker]]
+        endpoint = "unix:///var/run/docker.sock"
+
+        [[inputs.kubernetes]]
+        url = "https://$HOSTIP:10250"
+        bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        insecure_skip_verify = true
+
+        [global_tags]
+          Instance = "Pi"
+
+        [[outputs.influxdb_v2]]
+          urls           = ["https://europe-west1-1.gcp.cloud2.influxdata.com/"]
+          token          = "$INFLUXDB_TOKEN"
+          bucket         = "TheFaker"
+          organization   = "IIT BHU"
+
+# securityContext:
+#         privileged: true
