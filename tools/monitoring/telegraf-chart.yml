@@ -57,15 +57,19 @@ spec:
         url = "https://$HOSTIP:10250"
         bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
         insecure_skip_verify = true
+
         [[inputs.kube_inventory]]
         url = "https://$HOSTIP:6443"
         bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
         insecure_skip_verify = true
+        namespace = ""
+        resource_include = [ "deployments", "pods", "statefulsets", "daemonsets" ]
 
         [[inputs.prometheus]]
         ## An array of urls to scrape metrics from.
         # urls = ["http://traefik-internal.traefik.svc:9100/metrics"]
         monitor_kubernetes_pods = true
+        url_tag = "metrics_url"
 
         [global_tags]
           Instance = "Pi"
