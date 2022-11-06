@@ -4,7 +4,7 @@ metadata:
   name: cm-app-photoprism
 data:
   PHOTOPRISM_AUTH_MODE: "password" # authentication mode (public, password)
-  PHOTOPRISM_SITE_URL: "https://pi.shivanshs9.me" # public server URL incl http:// or https:// and /path, :port is optional
+  PHOTOPRISM_SITE_URL: "https://photos.shivanshs9.me" # public server URL incl http:// or https:// and /path, :port is optional
   PHOTOPRISM_ORIGINALS_LIMIT: "5000" # file size limit for originals in MB (increase for high-res video)
   PHOTOPRISM_HTTP_COMPRESSION: "none" # improves transfer speed and bandwidth utilization (none or gzip)
   PHOTOPRISM_WORKERS: "2" # limits the number of indexing workers to reduce system load
@@ -27,10 +27,12 @@ data:
   PHOTOPRISM_DATABASE_SERVER: "svc-db-mariadb:3306" # MariaDB or MySQL database server (hostname:port)
   PHOTOPRISM_DATABASE_NAME: "photoprism" # MariaDB or MySQL database schema name
   PHOTOPRISM_DATABASE_USER: "photoprism" # MariaDB or MySQL database user name
-  PHOTOPRISM_SITE_CAPTION: "AI-Powered Photos App"
-  PHOTOPRISM_SITE_DESCRIPTION: "Fuck Google?!" # meta site description
-  PHOTOPRISM_SITE_AUTHOR: "TheFaker" # meta site author
+  PHOTOPRISM_SITE_TITLE: "TheFaker Photos"
+  PHOTOPRISM_SITE_CAPTION: "Pi-hosted Photos on Cloud"
+  PHOTOPRISM_SITE_DESCRIPTION: "Google Photos? Ditch 'em corporates and self-host your own cloud storage." # meta site description
+  PHOTOPRISM_SITE_AUTHOR: "shivanshs9" # meta site author
   PHOTOPRISM_SPONSOR: "true"
+  PHOTOPRISM_PROD: "true"
   ## Run/install on first startup (options: update, gpu, tensorflow, davfs, clean):
   # PHOTOPRISM_INIT: "update clean"
   ## Hardware Video Transcoding (for sponsors only due to high maintenance and support costs):

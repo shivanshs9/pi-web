@@ -1,15 +1,14 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: app-photoprism
 spec:
-  serviceName: svc-app-photoprism
-  podManagementPolicy: Parallel
+  replicas: 1
   template:
     spec:
       containers:
         - name: app
-          image: photoprism/photoprism:221103-arm64
+          image: photoprism/photoprism:221105-arm64
           workingDir: "/photoprism"
           ports:
             - containerPort: 2342
