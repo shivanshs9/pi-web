@@ -1,0 +1,51 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: influx-stats-viewer
+  labels:
+    app.kubernetes.io/instance: telegraf
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: telegraf-ds
+    helm.sh/chart: telegraf-ds-1.1.5
+    rbac.authorization.k8s.io/aggregate-view-telegraf-stats: "true"
+rules:
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["nodes/proxy", "nodes/stats"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["persistentvolumes", "nodes"]
+    verbs: ["get", "list"]
+---
+# Define global role with the default system:aggregate-to-view cluster role and the two rules we just created
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: influx:telegraf
+aggregationRule:
+  clusterRoleSelectors:
+    - matchLabels:
+        rbac.authorization.k8s.io/aggregate-view-telegraf-stats: "true"
+    - matchLabels:
+        rbac.authorization.k8s.io/aggregate-to-view: "true"
+rules: [] # Rules are automatically filled in by the controller manager.
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: influx-telegraf-viewer
+  labels:
+    app.kubernetes.io/instance: telegraf
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: telegraf-ds
+    helm.sh/chart: telegraf-ds-1.1.5
+subjects:
+  - kind: ServiceAccount
+    name: telegraf-telegraf-ds
+    namespace: monitoring
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: influx:telegraf

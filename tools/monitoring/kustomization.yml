@@ -6,6 +6,7 @@ namespace: monitoring
 resources:
   - namespace.yml
   - telegraf-chart.yml
+  - telegraf-rbac.yml
   - grafana-chart.yml
 
 generators:

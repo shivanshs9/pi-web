@@ -13,6 +13,8 @@ spec:
       tag: "1.24" # alpine won't work in arm64
 
     envFromSecret: "sec-influxdb"
+    rbac:
+      create: false
 
     override_config:
       toml: ~
@@ -48,13 +50,22 @@ spec:
 
         [[inputs.disk]]
         ignore_fs = ["tmpfs", "devtmpfs", "devfs", "iso9660", "overlay", "aufs", "squashfs"]
-        [[inputs.docker]]
-        endpoint = "unix:///var/run/docker.sock"
+        # [[inputs.docker]]
+        # endpoint = "unix:///var/run/docker.sock"
 
         [[inputs.kubernetes]]
         url = "https://$HOSTIP:10250"
         bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
         insecure_skip_verify = true
+        [[inputs.kube_inventory]]
+        url = "https://$HOSTIP:6443"
+        bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        insecure_skip_verify = true
+
+        [[inputs.prometheus]]
+        ## An array of urls to scrape metrics from.
+        # urls = ["http://traefik-internal.traefik.svc:9100/metrics"]
+        monitor_kubernetes_pods = true
 
         [global_tags]
           Instance = "Pi"

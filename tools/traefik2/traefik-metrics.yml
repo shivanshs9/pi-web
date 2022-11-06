@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-internal
+  namespace: traefik
+  labels:
+    app.kubernetes.io/instance: traefik-traefik
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: traefik
+    helm.sh/chart: traefik-19.0.3
+  annotations:
+    meta.helm.sh/release-name: traefik
+    meta.helm.sh/release-namespace: traefik
+spec:
+  selector:
+    app.kubernetes.io/instance: traefik-traefik
+    app.kubernetes.io/name: traefik
+  ports:
+    - name: metrics
+      protocol: TCP
+      port: 9100
+      targetPort: metrics
+  type: ClusterIP
