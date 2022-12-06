@@ -24,6 +24,7 @@ spec:
         level: INFO
       access:
         enabled: true
+        format: json
 
     service:
       enabled: true
