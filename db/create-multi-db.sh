@@ -20,6 +20,8 @@ function create_user_and_database() {
             \$do\$;
         CREATE DATABASE $database;
         GRANT ALL PRIVILEGES ON DATABASE $database TO $owner;
+        \c $database
+        GRANT ALL ON schema public TO $owner;
 EOSQL
 }
 
@@ -30,4 +32,3 @@ if [ -n "$POSTGRES_MULTIPLE_DATABASES" ]; then
     done
     echo "Multiple databases created"
 fi
-
