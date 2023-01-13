@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stremio-server
+spec:
+  selector:
+    matchLabels:
+      app: stremio-server
+  template:
+    metadata:
+      labels:
+        app: stremio-server
+    spec:
+      containers:
+        - name: stremio-server
+          image: sleeyax/stremio-streaming-server:4.19.0
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 11470

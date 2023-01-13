@@ -8,5 +8,5 @@ generators:
 
 commonAnnotations:
   reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-  reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "monitoring,photoprism"
+  reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "monitoring,ory,photoprism"
   reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"

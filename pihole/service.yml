@@ -1,9 +1,22 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-pihole-internal
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: svc-pihole
   annotations:
     metallb.universe.tf/address-pool: "private-ips"
+    external-dns.alpha.kubernetes.io/hostname: "pi.hole."
 spec:
   type: LoadBalancer
   ports:

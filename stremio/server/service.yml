@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-stremio-server
+  annotations:
+    metallb.universe.tf/address-pool: "private-ips"
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 11470
+      name: http
