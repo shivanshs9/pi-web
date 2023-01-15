@@ -13,10 +13,24 @@ spec:
     spec:
       containers:
         - name: stremio-server
-          image: sleeyax/stremio-streaming-server:4.19.0
+          image: shivanshs9/stremio-streaming-server:latest
+          imagePullPolicy: IfNotPresent
           resources:
             limits:
+              memory: "1Gi"
+              cpu: "4M"
+            requests:
               memory: "512Mi"
               cpu: "500m"
+          env:
+            - name: FIX_CORS
+              value: "1"
           ports:
             - containerPort: 11470
+          volumeMounts:
+            - mountPath: /root/.stremio-server/
+              name: cache-stremio
+      volumes:
+        - name: cache-stremio
+          hostPath:
+            path: /mnt/data1/stremio
