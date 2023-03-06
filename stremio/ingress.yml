@@ -1,16 +1,22 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: internal-stremio-web
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "web"
 spec:
-  entryPoints:
-    - web
-  routes:
-    - match: Host(`media.pi`)
-      kind: Rule
-      services:
-        - name: svc-web-stremio
-          port: http
+  rules:
+  - host: media.pi
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: svc-web-stremio
+            port:
+              name: http
+
 
 ---
 apiVersion: traefik.containo.us/v1alpha1

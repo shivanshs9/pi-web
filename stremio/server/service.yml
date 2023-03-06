@@ -4,6 +4,7 @@ metadata:
   name: svc-stremio-server
   annotations:
     metallb.universe.tf/address-pool: "private-ips"
+    external-dns.alpha.kubernetes.io/hostname: "stremio.pi."
 spec:
   type: LoadBalancer
   ports:
