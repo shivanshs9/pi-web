@@ -6,7 +6,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`thefaker`)
+    - match: Host(`photos.pi`)
       kind: Rule
       services:
         - name: svc-app-photoprism
