@@ -3,13 +3,7 @@ kind: Deployment
 metadata:
   name: stremio-server
 spec:
-  selector:
-    matchLabels:
-      app: stremio-server
   template:
-    metadata:
-      labels:
-        app: stremio-server
     spec:
       containers:
         - name: stremio-server
@@ -23,13 +17,16 @@ spec:
               memory: "512Mi"
               cpu: "500m"
           env:
-            - name: FIX_CORS
+            - name: FIX_UNSUPPORTED_MEDIA
               value: "1"
           ports:
             - containerPort: 11470
           volumeMounts:
             - mountPath: /root/.stremio-server/
               name: cache-stremio
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
       volumes:
         - name: cache-stremio
           hostPath:

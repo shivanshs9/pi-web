@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-web-stremio
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http

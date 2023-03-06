@@ -1,0 +1,30 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: internal-stremio-web
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`media.pi`)
+      kind: Rule
+      services:
+        - name: svc-web-stremio
+          port: http
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: public-stremio-web
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`media.shivanshs9.me`)
+      kind: Rule
+      services:
+        - name: svc-web-stremio
+          port: http
+  tls:
+    secretName: tls-pi-shivanshs9-me
