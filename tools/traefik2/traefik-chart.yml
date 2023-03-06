@@ -38,3 +38,8 @@ spec:
       websecure:
         forwardedHeaders:
           insecure: true
+
+    providers:
+      kubernetesIngress:
+        publishedService:
+          enabled: true
