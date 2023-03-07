@@ -1,16 +1,21 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
   name: internal-photos
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "web"
 spec:
-  entryPoints:
-    - web
-  routes:
-    - match: Host(`photos.pi`)
-      kind: Rule
-      services:
-        - name: svc-app-photoprism
-          port: http
+  rules:
+  - host: photos.pi
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: svc-app-photoprism
+            port:
+              name: http
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
