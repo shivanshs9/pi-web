@@ -18,6 +18,10 @@ spec:
           env:
             - name: TZ
               value: "Asia/Kolkata"
+            - name: FTLCONF_LOCAL_IPV4
+              value: "0.0.0.0"
+            - name: PIHOLE_DNS_
+              value: "1.1.1.1"
             - name: WEBPASSWORD
               valueFrom:
                 secretKeyRef:
@@ -43,13 +47,15 @@ spec:
               mountPath: /etc/pihole
             - name: dnsmasq
               mountPath: /etc/dnsmasq.d
+            - mountPath: /dev/shm
+              name: dshm
           resources:
             requests:
               memory: 128Mi
-              cpu: 100m
+              cpu: 150m
             limits:
               memory: 512Mi
-              cpu: 200m
+              cpu: 500m
       volumes:
         - name: etc
           hostPath:
@@ -59,3 +65,6 @@ spec:
           hostPath:
             path: /etc/dnsmasq.d
             type: Directory
+        - name: dshm
+          emptyDir:
+            medium: Memory
