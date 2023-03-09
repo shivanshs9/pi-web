@@ -1,0 +1,43 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: registry
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: registry
+          image: registry:2.8.1
+          ports:
+            - name: registry
+              containerPort: 5000
+          volumeMounts:
+            # - name: credentials
+            #   mountPath: /auth
+            #   readOnly: true
+            - name: registry-images
+              mountPath: /var/lib/registry
+          env:
+            - name: REGISTRY_LOG_ACCESSLOG_DISABLED
+              value: "true"
+            - name: REGISTRY_LOG_LEVEL
+              value: info
+            - name: REGISTRY_HTTP_SECRET
+              value: registry-http-secret
+            # - name: REGISTRY_AUTH_HTPASSWD_REALM
+            #   value: dotpi
+            # - name: REGISTRY_AUTH_HTPASSWD_PATH
+            #   value: /auth/htpasswd
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 150m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+      volumes:
+        - name: registry-images
+          hostPath:
+            path: /var/lib/registry
+            type: Directory

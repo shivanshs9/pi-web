@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-registry
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 5000
+      name: http
