@@ -38,4 +38,4 @@ spec:
       volumes:
         - name: data-db-mariadb
           hostPath:
-            path: /mnt/data1/photoprism/database
+            path: /mnt/data1/photoprism/mariadb
