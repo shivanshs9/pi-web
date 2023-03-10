@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mariadb-snapshot
+spec:
+  schedule: "0 9 */2 * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          containers:
+            - name: mysql
+              image: joseluisq/alpine-mysql-client:1
+              imagePullPolicy: IfNotPresent
+              args:
+                - sh
+                - "-c"
+                - "set -eux; export DB_EXPORT_FILE_PATH=output/$(date +%Y-%m-%d-%I-%M%p).sql.gz; mysql_exporter"
+              env:
+                - name: DB_EXPORT_GZIP
+                  value: "true"
+                - name: DB_HOST
+                  value: "svc-db-mariadb"
+                - name: DB_PORT
+                  value: "3306"
+                - name: DB_NAME
+                  value: "photoprism"
+                - name: DB_USERNAME
+                  value: "photoprism"
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: MARIADB_PASSWORD
+                      name: sec-db-mariadb
+              resources:
+                limits:
+                  memory: 256Mi
+                  cpu: 200m
+              volumeMounts:
+                - mountPath: /home/mysql/output
+                  name: db-backup
+          volumes:
+            - name: db-backup
+              hostPath:
+                path: /mnt/volumes/mariadb-snapshots
