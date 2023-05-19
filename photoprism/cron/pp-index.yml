@@ -22,11 +22,8 @@ spec:
                 - secretRef:
                     name: sec-app-photoprism
               args:
-                - "[ $(ls -A /photoprism/originals/Shivansh) ]"
-                - "&&"
                 - photoprism
                 - index
-                - --cleanup
               resources:
                 requests:
                   cpu: 1000m
