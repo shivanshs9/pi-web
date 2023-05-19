@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: stremio-web
-          image: shivanshs9/stremio-web:dceb4144
+          image: registry.pi/shivanshs9/stremio-web:6d92e038
           imagePullPolicy: IfNotPresent
           resources:
             limits:
