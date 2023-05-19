@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: photoprism/photoprism:221105-arm64
+          image: photoprism
           workingDir: "/photoprism"
           ports:
             - containerPort: 2342

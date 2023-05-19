@@ -14,7 +14,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: photprism
-              image: photoprism/photoprism:arm64
+              image: photoprism
               workingDir: "/photoprism"
               envFrom:
                 - configMapRef:
@@ -22,6 +22,8 @@ spec:
                 - secretRef:
                     name: sec-app-photoprism
               args:
+                - "[ $(ls -A /photoprism/originals/Shivansh) ]"
+                - "&&"
                 - photoprism
                 - index
                 - --cleanup

@@ -9,3 +9,8 @@ resources:
   - app
   - cron
   - ingress.yml
+
+images:
+  - name: photoprism
+    newName: photoprism/photoprism
+    newTag: "230514"
