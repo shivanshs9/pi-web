@@ -9,4 +9,6 @@ spec:
         - name: reloader
           command: ["sh", "/etc/frr_reloader/frr-reloader.sh"]
         - name: frr-metrics
-          command: ["sh", "-c", "/etc/frr_metrics/frr-metrics"]
+          command: ["sh", "-c"]
+          args:
+            - "/etc/frr_metrics/frr-metrics --metrics-port=7473"
