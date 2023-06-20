@@ -7,10 +7,36 @@ spec:
   chart: telegraf-ds
   repo: https://helm.influxdata.com/
   targetNamespace: monitoring
-  version: 1.1.5
+  version: 1.1.10
   valuesContent: |-
     image:
-      tag: "1.24" # alpine won't work in arm64
+      tag: "1.26.3" # alpine won't work in arm64
+
+    ## Environment
+    env:
+      - name: NODE_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      # This pulls HOSTNAME from the node, not the pod.
+      - name: HOSTNAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+      - name: HOSTIP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+      # Mount the host filesystem and set the appropriate env variables.
+      # ref: https://github.com/influxdata/telegraf/blob/master/docs/FAQ.md
+      # HOST_PROC is required by the cpu, disk, diskio, kernel and processes input plugins
+      - name: "HOST_PROC"
+        value: "/hostfs/proc"
+      # HOST_SYS is required by the diskio plugin
+      - name: "HOST_SYS"
+        value: "/hostfs/sys"
+      - name: "HOST_MOUNT_PREFIX"
+        value: "/hostfs"
 
     envFromSecret: "sec-influxdb"
     rbac:
