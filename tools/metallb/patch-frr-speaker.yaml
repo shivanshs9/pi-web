@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: speaker
+spec:
+  template:
+    spec:
+      containers:
+        - name: reloader
+          command: ["sh", "/etc/frr_reloader/frr-reloader.sh"]
+        - name: frr-metrics
+          command: ["sh", "-c", "/etc/frr_metrics/frr-metrics"]
