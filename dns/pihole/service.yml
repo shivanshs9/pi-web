@@ -19,6 +19,11 @@ metadata:
     external-dns.alpha.kubernetes.io/hostname: "pi.hole."
 spec:
   type: LoadBalancer
+  # Set Local externalTrafficPolicy is equivalent to IP
+  # target type in AWS LB; traffic to a node is sent to node-local
+  # endpoint instead of being routed between the nodes.
+  ## Client IP is preserved.
+  externalTrafficPolicy: Local
   ports:
     - protocol: TCP
       port: 80
@@ -26,3 +31,11 @@ spec:
     - protocol: TCP
       port: 443
       name: https
+    - protocol: UDP
+      port: 53
+      targetPort: 53
+      name: dns-udp
+    - protocol: TCP
+      port: 53
+      targetPort: 53
+      name: dns

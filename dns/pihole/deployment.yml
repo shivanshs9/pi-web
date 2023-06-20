@@ -32,10 +32,13 @@ spec:
           ports:
             - containerPort: 53
               protocol: TCP
+              name: dns
             - containerPort: 53
               protocol: UDP
+              name: dns-udp
             - containerPort: 67
               protocol: UDP
+              name: dhcp
             - containerPort: 80
               protocol: TCP
               name: http
