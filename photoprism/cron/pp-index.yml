@@ -13,7 +13,7 @@ spec:
         spec:
           restartPolicy: Never
           containers:
-            - name: photprism
+            - name: photoprism
               image: photoprism
               workingDir: "/photoprism"
               envFrom:
@@ -21,7 +21,9 @@ spec:
                     name: cm-app-photoprism
                 - secretRef:
                     name: sec-app-photoprism
-              args:
+              # Don't use args since photoprism's entrypoint script keeps on retrying
+              # https://github.com/photoprism/photoprism/commit/8bfd95ddc4d198bafdc1a6eb1bba352bff4500be
+              command:
                 - photoprism
                 - index
               resources:
