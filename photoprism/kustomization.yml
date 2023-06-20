@@ -13,4 +13,4 @@ resources:
 images:
   - name: photoprism
     newName: photoprism/photoprism
-    newTag: "230514"
+    newTag: "230615"
