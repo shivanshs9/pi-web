@@ -8,6 +8,7 @@ resources:
   - telegraf-chart.yml
   - telegraf-rbac.yml
   - grafana-chart.yml
+  - dashboards
 
 generators:
   - generator.yml

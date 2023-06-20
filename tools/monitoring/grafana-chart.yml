@@ -22,13 +22,47 @@ spec:
         root_url: https://pi.shivanshs9.me/grafana
         serve_from_sub_path: true
 
+    persistence:
+      type: pvc
+      enabled: true
+      size: 4Gi
+
     envFromSecret: sec-influxdb
+
+    # ref: http://docs.grafana.org/administration/provisioning/#dashboards
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'general'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: true
+          updateIntervalSeconds: 10
+          allowUiUpdates: true
+          options:
+            path: /var/lib/grafana/dashboards/general
+        - name: 'k8s'
+          orgId: 1
+          folder: 'Kubernetes'
+          type: file
+          disableDeletion: true
+          updateIntervalSeconds: 10
+          allowUiUpdates: true
+          options:
+            path: /var/lib/grafana/dashboards/k8s
+
+    dashboardsConfigMaps:
+      general: grafana-folder-general
+      k8s: grafana-folder-k8s
 
     datasources:
       datasources.yaml:
         apiVersion: 1
         datasources:
           - name: InfluxDB
+            uid: P951FEA4DE68E13C5
             type: influxdb
             access: proxy
             url: $INFLUXDB_URL
@@ -38,3 +72,15 @@ spec:
               version: Flux
               organization: "IIT BHU"
               defaultBucket: "TheFaker"
+          - name: InfluxDB-SQL
+            uid: v2zmXou4z
+            type: influxdb
+            access: proxy
+            url: $INFLUXDB_URL
+            database: TheFaker
+            secureJsonData:
+              httpHeaderValue1: 'Token $INFLUXDB_TOKEN'
+            jsonData:
+              dbName: TheFaker
+              httpMode: GET
+              httpHeaderName1: 'Authorization'

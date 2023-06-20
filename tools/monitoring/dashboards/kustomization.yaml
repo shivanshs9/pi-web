@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+  - files:
+      - host-metrics.json
+      # - k8s-overall.json
+    name: grafana-folder-general
+    options:
+      disableNameSuffixHash: true
+  - files:
+      - k8s-overall.json
+    name: grafana-folder-k8s
+    options:
+      disableNameSuffixHash: true
