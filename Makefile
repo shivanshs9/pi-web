@@ -9,3 +9,5 @@ photoprism:
 db:
 	cd $@ && $(DOCKER_COMPOSE_UP)
 
+encrypt:
+	sops --encrypt ./app/secret.ignore.yml > ./app/secret.yml

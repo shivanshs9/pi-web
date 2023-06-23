@@ -1,0 +1,31 @@
+nameOverride: server
+
+image:
+  repository: vaultwarden/server
+  tag: 1.28.1-alpine
+
+service:
+  port: 8080
+
+domain: https://vault.shivanshs9.me
+
+database:
+  type: postgresql
+  existingSecret: "sec-vault-db"
+  existingSecretKey: "postgres_uri"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 50Mi
+  limit:
+    cpu: 100m
+    memory: 100Mi
+
+ingress:
+  enabled: false
+
+storage:
+  enabled: true
+  size: "1Gi"
+  class: "local-path-retain"

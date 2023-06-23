@@ -2,3 +2,5 @@
 *.ignore.yml
 
 **.tar
+
+charts/
