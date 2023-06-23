@@ -31,10 +31,18 @@ spec:
               name: sh-create-multi-db
               subPath: create-multi-db.sh
       volumes:
-        - name: data-db-postgres
-          hostPath:
-            path: /mnt/data1/k8s/db-postgres
         - name: sh-create-multi-db
           configMap:
             name: sh-postgres-create-multi-db
             defaultMode: 0744
+  volumeClaimTemplates:
+    - metadata:
+        name: data-db-postgres
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 4Gi
+        volumeMode: Filesystem
+        storageClassName: local-path-retain
