@@ -9,19 +9,23 @@ service:
 
 domain: https://vault.shivanshs9.me
 
+adminToken:
+  existingSecret: sec-vault
+  existingSecretKey: admin_token
+
 database:
   type: postgresql
-  existingSecret: "sec-vault-db"
+  existingSecret: "sec-vault"
   existingSecretKey: "postgres_uri"
 
 smtp:
-  existingSecret: sec-vault-db
+  existingSecret: sec-vault
   host: smtp.sendgrid.net
   port: 587
   from: no-reply@shivanshs9.me
   fromName: "Vault Admin"
   username:
-    value: apikey
+    existingSecretKey: smtp_username
   password:
     existingSecretKey: sendgrid_key
   authMechanism: "Login"
