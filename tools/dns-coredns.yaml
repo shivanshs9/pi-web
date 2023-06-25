@@ -31,18 +31,4 @@ data:
         reload
         loadbalance
     }
-    import /etc/coredns/custom/*.server
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: coredns-custom
-  namespace: kube-system
-data:
-  pi.server: |
-    pi:53 {
-      log
-      kubernetes {
-        pods disabled
-      }
-    }
+    # import /etc/coredns/custom/*.server
