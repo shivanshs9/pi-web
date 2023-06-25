@@ -14,6 +14,18 @@ database:
   existingSecret: "sec-vault-db"
   existingSecretKey: "postgres_uri"
 
+smtp:
+  existingSecret: sec-vault-db
+  host: smtp.sendgrid.net
+  port: 587
+  from: no-reply@shivanshs9.me
+  fromName: "Vault Admin"
+  username:
+    value: apikey
+  password:
+    existingSecretKey: sendgrid_key
+  authMechanism: "Login"
+
 resources:
   requests:
     cpu: 50m
