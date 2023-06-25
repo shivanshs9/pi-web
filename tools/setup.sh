@@ -23,8 +23,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 
-find "$SCRIPTPATH" -maxdepth 1 -type d ! -path . -print | while read path; do
-	[[ ! -f $path/$CHECKFILE ]] && continue
+find "$SCRIPTPATH" -maxdepth 1 ! -path . -print | while read path; do
+	[[ -d $path ]] && [[ ! -f $path/$CHECKFILE ]] && continue
   dir=$(basename $path)
 	echo "[$dir] Found helm chart CRD for k3s."
   $SUDO [ -d $MANIFESTS_PATH/$dir ] && $SUDO rm -r $MANIFESTS_PATH/$dir
