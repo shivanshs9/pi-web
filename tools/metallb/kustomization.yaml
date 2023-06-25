@@ -6,6 +6,7 @@ namespace: metallb-system
 resources:
   - https://github.com/metallb/metallb//config/frr?ref=v0.13.7
   - metallb-private-ippool.yml
+  - metallb-mesh-ippool.yml
 
 patches:
   - path: patch-frr-speaker.yaml

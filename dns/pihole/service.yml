@@ -15,8 +15,9 @@ kind: Service
 metadata:
   name: svc-pihole
   annotations:
-    metallb.universe.tf/address-pool: "private-ips"
-    external-dns.alpha.kubernetes.io/hostname: "pi.hole."
+    metallb.universe.tf/address-pool: "mesh-ips"
+    external-dns.alpha.kubernetes.io/hostname: "hole.pi."
+    metallb.universe.tf/loadBalancerIPs: "10.69.0.10,2001:cafe:69:1::10"
 spec:
   type: LoadBalancer
   # Set Local externalTrafficPolicy is equivalent to IP
@@ -24,6 +25,7 @@ spec:
   # endpoint instead of being routed between the nodes.
   ## Client IP is preserved.
   externalTrafficPolicy: Local
+  ipFamilyPolicy: PreferDualStack
   ports:
     - protocol: TCP
       port: 80

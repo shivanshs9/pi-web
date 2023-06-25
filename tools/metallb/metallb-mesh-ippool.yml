@@ -1,0 +1,15 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: mesh-ips
+  namespace: metallb-system
+spec:
+  addresses:
+    - 10.69.0.1/16
+    - 2001:cafe:69:1::/112
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: mesh-layer2
+  namespace: metallb-system
