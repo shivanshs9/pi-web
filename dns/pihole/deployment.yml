@@ -22,6 +22,8 @@ spec:
               value: "0.0.0.0"
             - name: PIHOLE_DNS_
               value: "1.1.1.1"
+            - name: MAXDBDAYS
+              value: "7"
             - name: WEBPASSWORD
               valueFrom:
                 secretKeyRef:
