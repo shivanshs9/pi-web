@@ -22,19 +22,25 @@ spec:
               imagePullPolicy: IfNotPresent
               args:
                 - "sh"
-                - "/sh-backup-db.sh"
-              envFrom:
-              - secretRef:
-                  name: sec-db-postgres
+                - "/backup-db.sh"
+              env:
+                - name: PGHOST
+                  value: svc-db-postgres.database
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: POSTGRES_PASSWORD
+                      name: sec-db-postgres
               resources:
                 limits:
                   memory: 256Mi
                   cpu: 200m
               volumeMounts:
-                - mountPath: /home/psql/output
+                - mountPath: /backup
                   name: db-backup
-                - mountPath: /
+                - mountPath: /backup-db.sh
                   name: sh-backup-multi-db
+                  subPath: sh-backup-db.sh
           volumes:
             - name: sh-backup-multi-db
               configMap:

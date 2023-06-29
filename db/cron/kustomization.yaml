@@ -4,6 +4,11 @@ kind: Kustomization
 resources:
   - snapshot.yml
 
+labels:
+  - pairs:
+      app.kubernetes.io/component: cronjobs
+    includeSelectors: true
+
 configMapGenerator:
   - files:
       - sh-backup-db.sh

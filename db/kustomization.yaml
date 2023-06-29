@@ -5,23 +5,11 @@ namespace: database
 
 resources:
   - namespace.yml
-  - statefulset.yml
-  - service.yml
+  - postgres
   - cron
-
-configMapGenerator:
-  - files:
-      - configs/create-multi-db.sh
-    name: sh-postgres-create-multi-db
-
-generators:
-  - generator.yml
 
 labels:
   - pairs:
-      app.kubernetes.io/name: db-postgres
-      app.kubernetes.io/component: database
-      app.kubernetes.io/part-of: photoprism
       app.kubernetes.io/managed-by: kustomize
       app.kubernetes.io/created-by: controller-manager
     includeSelectors: true
