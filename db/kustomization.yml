@@ -7,10 +7,11 @@ resources:
   - namespace.yml
   - statefulset.yml
   - service.yml
+  - cron
 
 configMapGenerator:
   - files:
-      - create-multi-db.sh
+      - configs/create-multi-db.sh
     name: sh-postgres-create-multi-db
 
 generators:

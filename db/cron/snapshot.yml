@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-snapshot
+spec:
+  schedule: "0 9 */2 * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+          containers:
+            - name: psql
+              image: arm64v8/postgres:15-alpine
+              imagePullPolicy: IfNotPresent
+              args:
+                - "sh"
+                - "/sh-backup-db.sh"
+              envFrom:
+              - secretRef:
+                  name: sec-db-postgres
+              resources:
+                limits:
+                  memory: 256Mi
+                  cpu: 200m
+              volumeMounts:
+                - mountPath: /home/psql/output
+                  name: db-backup
+                - mountPath: /
+                  name: sh-backup-multi-db
+          volumes:
+            - name: sh-backup-multi-db
+              configMap:
+                name: sh-postgres-backup-multi-db
+                defaultMode: 0744
+            - name: db-backup
+              hostPath:
+                path: /mnt/volumes/postgres-snapshots

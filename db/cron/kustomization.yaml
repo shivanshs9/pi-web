@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - snapshot.yml
+
+configMapGenerator:
+  - files:
+      - sh-backup-db.sh
+    name: sh-postgres-backup-multi-db
