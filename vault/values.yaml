@@ -30,6 +30,9 @@ smtp:
     existingSecretKey: sendgrid_key
   authMechanism: "Login"
 
+signupsAllowed: true
+signupDomains: shivanshs9.me,iitbhu.ac.in
+
 resources:
   requests:
     cpu: 50m
