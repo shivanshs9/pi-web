@@ -24,6 +24,8 @@ spec:
               value: "1.1.1.1"
             - name: MAXDBDAYS
               value: "7"
+            - name: IGNORE_LOCALHOST
+              value: "yes"
             - name: WEBPASSWORD
               valueFrom:
                 secretKeyRef:
