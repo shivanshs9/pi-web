@@ -70,17 +70,17 @@ spec:
               token: $INFLUXDB_TOKEN
             jsonData:
               version: Flux
-              organization: "IIT BHU"
-              defaultBucket: "TheFaker"
+              organization: "TheFaker"
+              defaultBucket: "metrics"
           - name: InfluxDB-SQL
             uid: v2zmXou4z
             type: influxdb
             access: proxy
             url: $INFLUXDB_URL
-            database: TheFaker
+            database: metrics
             secureJsonData:
               httpHeaderValue1: 'Token $INFLUXDB_TOKEN'
             jsonData:
-              dbName: TheFaker
+              dbName: metrics
               httpMode: GET
               httpHeaderName1: 'Authorization'
