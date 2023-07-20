@@ -14,7 +14,7 @@ helmCharts:
   - name: vaultwarden
     releaseName: vaultwarden
     repo: http://shivanshs9.me/vaultwarden/
-    version: 0.14.0
+    version: 0.15.0
     valuesFile: values.yaml
 
 # patches:

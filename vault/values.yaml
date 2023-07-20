@@ -2,7 +2,7 @@ nameOverride: server
 
 image:
   repository: vaultwarden/server
-  tag: 1.28.1-alpine
+  tag: 1.29.0-alpine
 
 service:
   port: 8080
@@ -12,6 +12,13 @@ domain: https://vault.shivanshs9.me
 adminToken:
   existingSecret: sec-vault
   existingSecretKey: admin_token
+
+bitwarden:
+  existingSecret: sec-vault
+  installationId:
+    existingSecretKey: installation_id
+  installationKey:
+    existingSecretKey: installation_key
 
 database:
   type: postgresql
