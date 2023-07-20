@@ -104,10 +104,10 @@ spec:
           Instance = "Pi"
 
         [[outputs.influxdb_v2]]
-          urls           = ["https://europe-west1-1.gcp.cloud2.influxdata.com/"]
+          urls           = ["https://eu-central-1-1.aws.cloud2.influxdata.com/"]
           token          = "$INFLUXDB_TOKEN"
-          bucket         = "TheFaker"
-          organization   = "IIT BHU"
+          bucket         = "metrics"
+          organization   = "TheFaker"
 
 # securityContext:
 #         privileged: true
