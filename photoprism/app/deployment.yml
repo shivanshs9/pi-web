@@ -24,7 +24,7 @@ spec:
               memory: 1Gi
             limits:
               cpu: 600m
-              memory: 2Gi
+              memory: 3Gi
           readinessProbe:
             httpGet:
               path: /api/v1/status
