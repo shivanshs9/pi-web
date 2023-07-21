@@ -14,9 +14,11 @@ Cloud native IaC for personal Home server on PI.
 - Using a RAID-like setup with 3 data disks and 1 parity disk, achieving disk failover for data recovery , and leveraged OverlayFS for merging the data disks.
 
 #### Apps
-- [Photoprism](https://github.com/photoprism/photoprism)
-- Stremio server
-- Grafana
+- [Photoprism](https://github.com/photoprism/photoprism) for photos
+- [VaultWarden](https://github.com/shivanshs9/vaultwarden/) for passwords
+- [ORY ecosystem](https://www.ory.sh/docs/ecosystem/projects) for auth
+- Stremio server for media streaming
+- Grafana for APM monitoring
 - Docker registry
 - Traefik as Ingress controller
 - MetalLB as NLB
