@@ -12,11 +12,13 @@ Cloud native IaC for personal Home server on PI.
 - Using CF Origin TLS certs with Traefik for HTTPS.
 - Running both MariaDB and PostgreSQL with automated snapshot using CronJobs.
 - Using a RAID-like setup with 3 data disks and 1 parity disk, achieving disk failover for data recovery , and leveraged OverlayFS for merging the data disks.
+- Leveraged [Tailscale Mesh](https://tailscale.com/) to securely connect all my devices.
 
 #### Apps
 - [Photoprism](https://github.com/photoprism/photoprism) for photos
 - [VaultWarden](https://github.com/shivanshs9/vaultwarden/) for passwords
 - [ORY ecosystem](https://www.ory.sh/docs/ecosystem/projects) for auth
+- [Obsidian](https://obsidian.md/) with [Syncthing](https://github.com/syncthing/syncthing) as my second brain
 - Stremio server for media streaming
 - Grafana for APM monitoring
 - Docker registry
