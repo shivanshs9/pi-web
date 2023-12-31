@@ -4,3 +4,4 @@ metadata:
   name: NotImportant
 files:
   - ./pi-ss9.yml
+  - ./dotpi.yml
