@@ -55,6 +55,15 @@ spec:
             - name: cm-exchange-files
               mountPath: /usr/share/nginx/html/data/filesData.json
               subPath: filesData.json
+              readOnly: true
+            - name: cm-nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: nginx.conf
+              readOnly: true
+            - name: sec-user-htpasswd
+              mountPath: /etc/nginx/.htpasswd
+              subPath: htpasswd
+              readOnly: true
       volumes:
         - name: data-shared-notes
           emptyDir: {}
@@ -65,3 +74,9 @@ spec:
         - name: cm-exchange-files
           configMap:
             name: cm-exchange-files
+        - name: cm-nginx-conf
+          configMap:
+            name: cm-nginx-conf
+        - name: sec-user-htpasswd
+          secret:
+            secretName: sec-user-htpasswd

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: sec-user-htpasswd
+data:
+    htpasswd: ENC[AES256_GCM,data:0T4L53sbrJG9Tq+J5djB2C0rdk2F6e4Vgje/B4cB/PnVemPffr5a6DbrdI3xwhV6Hh8PdTrRIiadwYrtM0zayBTT5qYV8DR00Qc0Rr3S1ZRFCYvPmcpN9bHDaZYKvrKF+6Rpr6c3NWlM33zous64q+qSb/ufVAjK,iv:Nn2wIU+IdNfCHElHaBaQgS99q+BpXTfbiBXN7LEQYk4=,tag:6EeHO4mroSWA2GLVziANiQ==,type:str]
+type: Opaque
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age:
+        - recipient: age1g9rc4u588qjh8num2u6yth5mlagk5p97y9n69p4a4smsgqk7jvjsef90ta
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByTFdLQ0VGMzZpNlVtZkVn
+            YXZvL0ord21ZU1FZYVFTUi9EbTZpb25QTHdnClVZSHV2bENCNzhNdElkTFJxQWJa
+            a3V4Z2pneFZreVVFc21DS3Iwdi9Zc3MKLS0tIHBySjAzUkxKeVhpb1dlb2xmMkUv
+            ckJqN2xOMDBTTS9Yd3hPZktHYkpFZmsKmTQJ4JpjYyZuDvPHHwSWx4W1qxWeFkqN
+            lPWMilW4Pvh4nC9b+lQx/egjzqMRIWmcMsWjIWa7zzG44KCEsGoYaw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2023-12-31T17:25:03Z"
+    mac: ENC[AES256_GCM,data:V9wDuU6RjYGz7kqoWZ8S0N9EgJxJi9tV7yDfGkdaI9GzHXzb305TuQJG7/PUo9bQPHaeJMQymhTqztgKs4bR6WKurHJYiLBpiQMuBF5BJBlfMkI3wf7d0NbYZ13ZBtKwSbBuAhnTZpedwIFzg5Vx3OjAroh0uO9I8nam0fxFJAo=,iv:r7j7ov+QbSZMKJqTFzMUoIx2nG5nD8hIlQVOkS/YmdY=,tag:Dq3y15OlVLJobgrhMwK8rw==,type:str]
+    pgp: []
+    encrypted_regex: ^(data|stringData)$
+    version: 3.8.0

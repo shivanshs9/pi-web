@@ -12,7 +12,13 @@ resources:
 configMapGenerator:
   - name: cm-exchange-files
     files:
-      - "filesData.json=filesData.json"
+      - "filesData.json=configs/filesData.json"
+  - name: cm-nginx-conf
+    files:
+      - "nginx.conf=configs/nginx.conf"
+
+generators:
+  - generator.yml
 
 labels:
   - pairs:
