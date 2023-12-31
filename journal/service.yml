@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-journal-exchange
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http

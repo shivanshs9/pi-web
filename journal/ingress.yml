@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: public-journal-exchange
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`journal.shivanshs9.me`)
+      kind: Rule
+      services:
+        - name: svc-journal-exchange
+          port: http
+  tls:
+    secretName: tls-pi-shivanshs9-me

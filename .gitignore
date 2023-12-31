@@ -1,5 +1,6 @@
 .env
-*.ignore.yml
+journal/configs/filesData.json
+*.ignore.*
 
 **.tar
 

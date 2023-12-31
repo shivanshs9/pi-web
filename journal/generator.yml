@@ -3,5 +3,4 @@ kind: ksops
 metadata:
   name: NotImportant
 files:
-  - ./pi-ss9.yml
-  - ./dotpi.yml
+  - ./sec-users.yml
