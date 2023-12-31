@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-journal-exchange
+spec:
+  replicas: 1
+  template:
+    spec:
+      initContainers:
+      - name: symlink-files
+        image: busybox
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          set -eux;
+          for dir in $(cat /app/files.json | jq -r '.[] | .name'); do
+            for file in $(cat /app/files.json | jq -r --arg dir "$dir" '.[] | select(.name == $dir) | .files[] | .path'); do
+              mkdir -p $(dirname /app/shared/$file)
+              ln -s "/app/host/$file" "/app/shared/$file"
+            done
+          done
+        volumeMounts:
+        - name: data-host-notes
+          mountPath: /app/host
+          readOnly: true
+        - name: data-shared-notes
+          mountPath: /app/shared
+        - name: cm-exchange-files
+          mountPath: /app/files.json
+          subPath: files.json
+      containers:
+        - name: app
+          image: journal
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 81
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 6
+          volumeMounts:
+            - name: data-shared-notes
+              mountPath: /usr/share/nginx/html/data
+            - name: cm-exchange-files
+              mountPath: /usr/share/nginx/html/data/files.json
+              subPath: files.json
+      volumes:
+        - name: data-shared-notes
+          emptyDir: {}
+        - name: data-host-notes
+          hostPath:
+            path: /home/pi/Sync/Notes
+            type: Directory
+        - name: cm-exchange-files
+          configMap:
+            name: cm-exchange-files
