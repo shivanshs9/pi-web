@@ -12,9 +12,22 @@ resources:
 configMapGenerator:
   - name: cm-exchange-files
     files:
-      - "files.json=filesData.json"
+      - "filesData.json=filesData.json"
+
+labels:
+  - pairs:
+      app.kubernetes.io/name: journal-exchange
+      app.kubernetes.io/component: web
+      app.kubernetes.io/part-of: journal
+      app.kubernetes.io/managed-by: kustomize
+      app.kubernetes.io/created-by: controller-manager
+    includeSelectors: true
+  - pairs:
+      app.kubernetes.io/version: latest # TODO: add support of dynamic versioning in label
+    includeSelectors: false
+
 
 images:
   - name: journal
-    newName: journal-web
-    newTag: "3a41a50"
+    newName: registry.pi/shivanshs9/journal-web
+    newTag: "830a00d"

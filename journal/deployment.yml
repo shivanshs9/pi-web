@@ -8,15 +8,16 @@ spec:
     spec:
       initContainers:
       - name: symlink-files
-        image: busybox
+        image: alpine
         command: ["/bin/sh", "-c"]
         args:
         - |
           set -eux;
-          for dir in $(cat /app/files.json | jq -r '.[] | .name'); do
-            for file in $(cat /app/files.json | jq -r --arg dir "$dir" '.[] | select(.name == $dir) | .files[] | .path'); do
-              mkdir -p $(dirname /app/shared/$file)
-              ln -s "/app/host/$file" "/app/shared/$file"
+          apk add jq
+          for dir in $(cat /app/filesData.json | jq -r '.[] | .name'); do
+            cat /app/filesData.json | jq -r --arg dir "$dir" '.[] | select(.name == $dir) | .files[] | .path' | while IFS= read -r file; do
+              mkdir -p $(dirname "/app/shared/$file")
+              cp "/app/host/$file" "/app/shared/$file"
             done
           done
         volumeMounts:
@@ -26,8 +27,8 @@ spec:
         - name: data-shared-notes
           mountPath: /app/shared
         - name: cm-exchange-files
-          mountPath: /app/files.json
-          subPath: files.json
+          mountPath: /app/filesData.json
+          subPath: filesData.json
       containers:
         - name: app
           image: journal
@@ -52,8 +53,8 @@ spec:
             - name: data-shared-notes
               mountPath: /usr/share/nginx/html/data
             - name: cm-exchange-files
-              mountPath: /usr/share/nginx/html/data/files.json
-              subPath: files.json
+              mountPath: /usr/share/nginx/html/data/filesData.json
+              subPath: filesData.json
       volumes:
         - name: data-shared-notes
           emptyDir: {}
