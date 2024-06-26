@@ -9,6 +9,7 @@ spec:
         - name: reloader
           command: ["sh", "/etc/frr_reloader/frr-reloader.sh"]
         - name: frr-metrics
-          command: ["sh", "-c"]
+          command: ["bash", "-c"]
+          # Copying to /home since we get Permission Denied (idk why :/)
           args:
-            - "/etc/frr_metrics/frr-metrics --metrics-port=7473"
+            - "cp /etc/frr_metrics/frr-metrics /home/frr-metrics && /home/frr-metrics -metrics-port=7473"

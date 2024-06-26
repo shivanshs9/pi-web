@@ -8,6 +8,8 @@ metadata:
     reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: traefik
     reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
 spec:
+  # No IPv6 so just one IPv4 of the LB node.
+  # Right now the IP is dynamic, since I haven't yet configured static IP
+  # in DHCP settings of Router
   addresses:
-    - 192.168.1.69/32
-    - $IPv6_CIDR
+    - 192.168.1.103/32

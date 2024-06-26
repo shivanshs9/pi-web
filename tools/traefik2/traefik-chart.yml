@@ -31,8 +31,6 @@ spec:
       type: LoadBalancer
       annotations:
         metallb.universe.tf/address-pool: "public-ips"
-      spec:
-        ipFamilyPolicy: RequireDualStack
 
     ports:
       websecure:
