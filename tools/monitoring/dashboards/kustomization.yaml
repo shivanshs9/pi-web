@@ -4,6 +4,7 @@ kind: Kustomization
 configMapGenerator:
   - files:
       - host-metrics.json
+      - rclone-metrics.json
       # - k8s-overall.json
     name: grafana-folder-general
     options:

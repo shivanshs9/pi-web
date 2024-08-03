@@ -100,6 +100,14 @@ spec:
         url_tag = "metrics_url"
         namedrop = ["go_*"]
 
+        ## Rclone metrics source
+        [[inputs.prometheus]]
+        ## An array of urls to scrape metrics from.
+        urls = ["http://$HOSTIP:5572/metrics"]
+        # Rclone authentication
+        username = "admin"
+        password = "rclone"
+
         [global_tags]
           Instance = "Pi"
 
