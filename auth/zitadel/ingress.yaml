@@ -10,6 +10,6 @@ spec:
       kind: Rule
       services:
         - name: zitadel
-          port: http
+          port: http2-server
   tls:
     secretName: tls-pi-shivanshs9-me

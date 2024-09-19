@@ -22,6 +22,10 @@ zitadel:
           Username: postgres
           SSL:
             Mode: disable
+    SMTPConfiguration:
+      SMTP:
+        Host: smtp.sendgrid.net:587
+        User: apikey
   configSecretName: sec-zitadel
 
 replicaCount: 1
