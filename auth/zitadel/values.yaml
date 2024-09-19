@@ -1,0 +1,27 @@
+zitadel:
+  masterkeySecretName: sec-zitadel
+  configmapConfig:
+    ExternalSecure: true
+    ExternalDomain: auth.shivanshs9.me
+    TLS:
+      Enabled: false
+    Database:
+      Postgres:
+        Host: svc-db-postgres.database.svc
+        Port: 5432
+        Database: zitadel
+        MaxOpenConns: 20
+        MaxIdleConns: 10
+        MaxConnLifetime: 30m
+        MaxConnIdleTime: 5m
+        User:
+          Username: zitadel
+          SSL:
+            Mode: disable
+        Admin:
+          Username: postgres
+          SSL:
+            Mode: disable
+  configSecretName: sec-zitadel
+
+replicaCount: 1
