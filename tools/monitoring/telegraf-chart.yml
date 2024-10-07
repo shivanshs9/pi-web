@@ -7,11 +7,8 @@ spec:
   chart: telegraf-ds
   repo: https://helm.influxdata.com/
   targetNamespace: monitoring
-  version: 1.1.10
+  version: 1.1.34
   valuesContent: |-
-    image:
-      tag: "1.26.3" # alpine won't work in arm64
-
     ## Environment
     env:
       - name: NODE_IP
@@ -23,10 +20,6 @@ spec:
         valueFrom:
           fieldRef:
             fieldPath: spec.nodeName
-      - name: HOSTIP
-        valueFrom:
-          fieldRef:
-            fieldPath: status.hostIP
       # Mount the host filesystem and set the appropriate env variables.
       # ref: https://github.com/influxdata/telegraf/blob/master/docs/FAQ.md
       # HOST_PROC is required by the cpu, disk, diskio, kernel and processes input plugins
@@ -79,18 +72,24 @@ spec:
         # [[inputs.docker]]
         # endpoint = "unix:///var/run/docker.sock"
 
+        # Disk monitoring using S.M.A.R.T
+        [[inputs.smartctl]]
+        path = "$HOST_MOUNT_PREFIX/usr/bin/smartctl"
+        interval = "30m"
+
         [[inputs.kubernetes]]
-        url = "https://$HOSTIP:10250"
+        url = "https://$NODE_IP:10250"
         bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
         insecure_skip_verify = true
 
         [[inputs.kube_inventory]]
-        url = "https://$HOSTIP:6443"
+        url = "https://$NODE_IP:6443"
         bearer_token = "/var/run/secrets/kubernetes.io/serviceaccount/token"
         insecure_skip_verify = true
         namespace = ""
         resource_include = [ "deployments", "pods", "statefulsets", "daemonsets" ]
 
+        # Pods' Prometheus metrics source
         [[inputs.prometheus]]
         ## An array of urls to scrape metrics from.
         # urls = ["http://traefik-internal.traefik.svc:9100/metrics"]
@@ -103,7 +102,7 @@ spec:
         ## Rclone metrics source
         [[inputs.prometheus]]
         ## An array of urls to scrape metrics from.
-        urls = ["http://$HOSTIP:5572/metrics"]
+        urls = ["http://$NODE_IP:5572/metrics"]
         # Rclone authentication
         username = "admin"
         password = "rclone"
