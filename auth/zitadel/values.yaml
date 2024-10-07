@@ -26,6 +26,8 @@ zitadel:
       SMTP:
         Host: smtp.sendgrid.net:587
         User: apikey
+      From: no-reply@auth.shivanshs9.me
+      FromName: Zitadel
   configSecretName: sec-zitadel
 
 replicaCount: 1
