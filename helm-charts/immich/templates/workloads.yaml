@@ -168,6 +168,11 @@ persistence:
       server:
         main:
           - path: /usr/src/app/upload
+      {{ if $isMicroservicesEnabled }}
+      microservices:
+        main:
+          - path: /usr/src/app/upload
+      {{ end }}
     {{ if .Values.immich.persistence.library.existingClaim }}
     existingClaim: {{ .Values.immich.persistence.library.existingClaim }}
     {{ else if .Values.immich.persistence.library.hostPath }}
@@ -187,7 +192,6 @@ persistence:
       mlworker:
         main:
           - path: /cache
-    # storageClass: your-class
   {{ end }}
 {{- end }}
 
