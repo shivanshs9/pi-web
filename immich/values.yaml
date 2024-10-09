@@ -44,7 +44,8 @@ persistence:
 server:
   ingress:
     main:
-      enabled: true
+      enabled: false
+      # TODO: Remove later after deciding what to use for Traefik
       annotations:
         # proxy-body-size is set to 0 to remove the body limit on file uploads
         nginx.ingress.kubernetes.io/proxy-body-size: '50000M'

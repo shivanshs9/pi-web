@@ -5,15 +5,16 @@ controllers:
     enabled: {{ .Values.server.enabled }}
     strategy: RollingUpdate
     revisionHistoryLimit: 10
-    annotations:
-      {{- if .Values.immich.configuration }}
-      checksum/config: {{ .Values.immich.configuration | toYaml | sha256sum }}
-      {{- end }}
-      {{- if .Values.immich.metrics.enabled }}
-      prometheus.io/scrape: "true"
-      prometheus.io/path: "/metrics"
-      prometheus.io/port: "8081,8082"
-      {{- end }}
+    pod:
+      annotations:
+        {{- if .Values.immich.configuration }}
+        checksum/config: {{ .Values.immich.configuration | toYaml | sha256sum }}
+        {{- end }}
+        {{- if .Values.immich.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8081,8082"
+        {{- end }}
     defaultContainerOptions: &sharedOptions
       env:
         {{- if .Values.immich.configuration }}
