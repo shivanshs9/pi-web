@@ -2,7 +2,7 @@ nameOverride: server
 
 image:
   repository: vaultwarden/server
-  tag: 1.29.0-alpine
+  tag: 1.32.0-alpine
 
 service:
   port: 8080
