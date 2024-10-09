@@ -1,0 +1,133 @@
+{{- define "immich.workloads.hardcodedValues" -}}
+
+controllers:
+  server:
+    strategy: RollingUpdate
+    revisionHistoryLimit: 10
+    annotations:
+      {{- if .Values.immich.configuration }}
+      checksum/config: {{ .Values.immich.configuration | toYaml | sha256sum }}
+      {{- end }}
+      {{- if .Values.immich.metrics.enabled }}
+      prometheus.io/scrape: "true"
+      prometheus.io/path: "/metrics"
+      prometheus.io/port: "8081,8082"
+      {{- end }}
+    defaultContainerOptions: &sharedOptions
+      env: {{ .Values.env | toYaml | nindent 8 }}
+    containers:
+      main:
+        image: {{ mergeOverwrite .Values.server.image .Values.image | toYaml | nindent 10 }}
+        env:
+          IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-%s-mlworker:3003" .Release.Name .Chart.Name }}'
+          {{ mergeOverwrite (default .Values.server.env dict) .Values.env | toYaml | nindent 10 }}
+        probes:
+          liveness:
+            enabled: false
+          readiness: &serverProbes
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /api/server/ping
+                port: http
+              initialDelaySeconds: 0
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 3
+          startup: *serverProbes
+  mlworker:
+    defaultContainerOptions: *sharedOptions
+    revisionHistoryLimit: 10
+    containers:
+      main:
+        image: {{ mergeOverwrite .Values.mlworker.image .Values.image | toYaml | nindent 10 }}
+        env:
+          TRANSFORMERS_CACHE: /cache
+          {{ mergeOverwrite (default .Values.mlworker.env dict) .Values.env | toYaml | nindent 10 }}
+        probes:
+          liveness: &mlworkerProbes
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /ping
+                port: http
+              initialDelaySeconds: 0
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 3
+          readiness: *mlworkerProbes
+          startup:
+            enabled: false
+
+service:
+  server:
+    controller: server
+    type: ClusterIP
+    ports:
+      http:
+        enabled: true
+        primary: true
+        port: 3001
+        protocol: HTTP
+      metrics-api:
+        enabled: {{ .Values.immich.metrics.enabled }}
+        port: 8081
+        protocol: HTTP
+      metrics-ms:
+        enabled: {{ .Values.immich.metrics.enabled }}
+        port: 8082
+        protocol: HTTP
+  mlworker:
+    controller: mlworker
+    type: ClusterIP
+    ports:
+      http:
+        enabled: true
+        primary: true
+        port: 3003
+        protocol: HTTP
+
+persistence:
+{{- if .Values.immich.configuration }}
+  config:
+    enabled: true
+    type: configMap
+    name: {{ .Release.Name }}-immich-config
+{{- end }}
+  library:
+    enabled: true
+    {{ if .Values.immich.persistence.library.hostPath }}
+    type: hostPath
+    {{ else }}
+    type: persistentVolumeClaim
+    {{ end }}
+    globalMounts:
+      - path: /usr/src/app/upload
+    {{ if .Values.immich.persistence.library.existingClaim }}
+    existingClaim: {{ .Values.immich.persistence.library.existingClaim }}
+    {{ else if .Values.immich.persistence.library.hostPath }}
+    hostPath: {{ .Values.immich.persistence.library.hostPath }}
+    {{ else }}
+    accessMode: ReadWriteMany
+    size: {{ default .Values.immich.persistence.library.pvcSize "10Gi" }}
+    {{ end }}
+  # Cache for ML worker
+  cache:
+    enabled: true
+    size: 10Gi
+    # Optional: Set this to pvc to avoid downloading the ML models every start.
+    type: emptyDir
+    accessMode: ReadWriteMany
+    advancedMounts:
+      mlworker:
+        main:
+          - path: /cache
+    # storageClass: your-class
+{{- end }}
+
+
+{{- $ctx := deepCopy . -}}
+{{- $_ := mergeOverwrite $ctx.Values (include "immich.workloads.hardcodedValues" $ctx | fromYaml) -}}
+{{- include "bjw-s.common.loader.all" $ctx }}

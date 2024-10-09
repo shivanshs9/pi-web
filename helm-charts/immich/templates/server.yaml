@@ -1,0 +1,97 @@
+{{- define "immich.server.hardcodedValues" -}}
+global:
+  nameOverride: immich-server
+
+env:
+  {{ if .Values.immich.metrics.enabled }}
+      IMMICH_METRICS: true
+  {{ end }}
+  {{- if .Values.immich.configuration }}
+      IMMICH_CONFIG_FILE: /config/immich-config.yaml
+  {{- end }}
+
+service:
+  main:
+    controller: server
+    type: ClusterIP
+    ports:
+      http:
+        enabled: true
+        primary: true
+        port: 3001
+        protocol: HTTP
+      metrics-api:
+        enabled: {{ .Values.immich.metrics.enabled }}
+        port: 8081
+        protocol: HTTP
+      metrics-ms:
+        enabled: {{ .Values.immich.metrics.enabled }}
+        port: 8082
+        protocol: HTTP
+
+controllers:
+  server:
+    strategy: RollingUpdate
+    {{- if .Values.immich.configuration }}
+    annotations:
+      checksum/config: {{ .Values.immich.configuration | toYaml | sha256sum }}
+    {{- end }}
+    containers:
+      main:
+        image: {{ mergeOverwrite .Values.server.image .Values.image | toYaml | nindent 10 }}
+
+serviceMonitor:
+  main:
+    enabled: {{ .Values.immich.metrics.enabled }}
+    endpoints:
+      - port: metrics-api
+        scheme: http
+      - port: metrics-ms
+        scheme: http
+
+probes:
+  readiness: &probes
+    enabled: true
+    custom: true
+    spec:
+      httpGet:
+        path: /api/server/ping
+        port: http
+      initialDelaySeconds: 0
+      periodSeconds: 10
+      timeoutSeconds: 1
+      failureThreshold: 3
+  startup: *probes
+
+persistence:
+{{- if .Values.immich.configuration }}
+  config:
+    enabled: true
+    type: configMap
+    name: {{ .Release.Name }}-immich-config
+{{- end }}
+  library:
+    enabled: true
+    {{ if .Values.immich.persistence.library.hostPath }}
+    type: hostPath
+    {{ else }}
+    type: persistentVolumeClaim
+    {{ end }}
+    globalMounts:
+      - path: /usr/src/app/upload
+    {{ if .Values.immich.persistence.library.existingClaim }}
+    existingClaim: {{ .Values.immich.persistence.library.existingClaim }}
+    {{ else if .Values.immich.persistence.library.hostPath }}
+    hostPath: {{ .Values.immich.persistence.library.hostPath }}
+    {{ else }}
+    accessMode: ReadWriteOnce
+    size: {{ default .Values.immich.persistence.library.pvcSize "10Gi" }}
+    {{ end }}
+{{- end }}
+
+{{ if .Values.server.enabled }}
+{{- $ctx := deepCopy . -}}
+{{- $_ := get .Values "server" | mergeOverwrite $ctx.Values -}}
+{{- $_ = include "immich.server.hardcodedValues" . | fromYaml | merge $ctx.Values -}}
+{{- include "bjw-s.common.loader.all" $ctx }}
+{{ end }}
