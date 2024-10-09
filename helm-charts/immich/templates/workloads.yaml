@@ -1,10 +1,13 @@
 {{- define "immich.workloads.hardcodedValues" -}}
 
+{{- $isMicroservicesEnabled := and .Values.microservices.enabled .Values.microservices.replicas -}}
+
 controllers:
   server:
     enabled: {{ .Values.server.enabled }}
     strategy: RollingUpdate
     revisionHistoryLimit: 10
+    replicas: {{ .Values.server.replicas }}
     pod:
       annotations:
         {{- if .Values.immich.configuration }}
@@ -13,7 +16,7 @@ controllers:
         {{- if .Values.immich.metrics.enabled }}
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
-        prometheus.io/port: "8081,8082"
+        prometheus.io/port: "8081"
         {{- end }}
     defaultContainerOptions: &sharedOptions
       env:
@@ -23,13 +26,16 @@ controllers:
         {{ .Values.env | toYaml | nindent 8 }}
     containers:
       main:
-        image: {{ mergeOverwrite .Values.server.image .Values.image | toYaml | nindent 10 }}
+        image: {{ merge (default dict .Values.server.image) .Values.image | toYaml | nindent 10 }}
         env:
           {{ if .Values.immich.metrics.enabled }}
           IMMICH_METRICS: true
           {{ end }}
+          {{ if $isMicroservicesEnabled }}
+          IMMICH_WORKERS_INCLUDE: 'api'
+          {{ end }}
           IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-%s-mlworker:3003" .Release.Name .Chart.Name }}'
-          {{ mergeOverwrite (default .Values.server.env dict) .Values.env | toYaml | nindent 10 }}
+          {{ merge (default dict .Values.server.env) .Values.env | toYaml | nindent 10 }}
         probes:
           liveness:
             enabled: false
@@ -47,6 +53,33 @@ controllers:
           startup:
             enabled: false
         resources: {{ toYaml .Values.server.resources | nindent 10 }}
+  microservices:
+    enabled: {{ $isMicroservicesEnabled }}
+    strategy: RollingUpdate
+    revisionHistoryLimit: 10
+    replicas: {{ .Values.microservices.replicas }}
+    pod:
+      annotations:
+        {{- if .Values.immich.configuration }}
+        checksum/config: {{ .Values.immich.configuration | toYaml | sha256sum }}
+        {{- end }}
+        {{- if .Values.immich.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8082"
+        {{- end }}
+    defaultContainerOptions: *sharedOptions
+    containers:
+      main:
+        image: {{ merge (default dict .Values.microservices.image) .Values.image | toYaml | nindent 10 }}
+        env:
+          {{ if .Values.immich.metrics.enabled }}
+          IMMICH_METRICS: true
+          {{ end }}
+          IMMICH_WORKERS_EXCLUDE: 'api'
+          IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-%s-mlworker:3003" .Release.Name .Chart.Name }}'
+          {{ merge (default dict .Values.microservices.env) .Values.env | toYaml | nindent 10 }}
+        resources: {{ toYaml (default .Values.server.resources .Values.microservices.resources) | nindent 10 }}
   mlworker:
     enabled: {{ .Values.mlworker.enabled }}
     strategy: RollingUpdate
@@ -54,10 +87,10 @@ controllers:
     revisionHistoryLimit: 10
     containers:
       main:
-        image: {{ mergeOverwrite .Values.mlworker.image .Values.image | toYaml | nindent 10 }}
+        image: {{ merge .Values.mlworker.image .Values.image | toYaml | nindent 10 }}
         env:
           TRANSFORMERS_CACHE: /cache
-          {{ mergeOverwrite (default .Values.mlworker.env dict) .Values.env | toYaml | nindent 10 }}
+          {{ merge (default dict .Values.mlworker.env) .Values.env | toYaml | nindent 10 }}
         probes:
           liveness: &mlworkerProbes
             enabled: true
@@ -90,8 +123,20 @@ service:
         enabled: {{ .Values.immich.metrics.enabled }}
         port: 8081
         protocol: HTTP
+      {{ if not $isMicroservicesEnabled }}
       metrics-ms:
         enabled: {{ .Values.immich.metrics.enabled }}
+        port: 8082
+        protocol: HTTP
+      {{ end }}
+  microservices:
+    enabled: {{ $isMicroservicesEnabled }}
+    controller: microservices
+    type: ClusterIP
+    ports:
+      metrics-ms:
+        enabled: {{ .Values.immich.metrics.enabled }}
+        primary: true
         port: 8082
         protocol: HTTP
   mlworker:
@@ -129,7 +174,7 @@ persistence:
     hostPath: {{ .Values.immich.persistence.library.hostPath }}
     {{ else }}
     accessMode: ReadWriteOnce
-    size: {{ default .Values.immich.persistence.library.pvcSize "10Gi" }}
+    size: {{ default "10Gi" .Values.immich.persistence.library.pvcSize }}
     {{ end }}
   # Cache for ML worker
   {{ if .Values.mlworker.enabled }}

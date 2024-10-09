@@ -2,8 +2,6 @@
 ## You can find it at https://github.com/bjw-s/helm-charts/tree/main/charts/library/common
 ## Refer there for more detail about the supported values
 
-# These entries are shared between all the Immich components
-
 env:
   REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
   DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
@@ -13,6 +11,8 @@ env:
   DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
 
 image:
+  repository: ghcr.io/immich-app/immich-server
+  pullPolicy: IfNotPresent
   tag: v1.117.0
 
 immich:
@@ -22,8 +22,7 @@ immich:
   persistence:
     # Main data store for all photos shared between different components.
     library:
-      # Automatically creating the library volume is not supported by this chart
-      # You have to specify an existing PVC to use
+      # If you have existing PVC for your library, please mention it here
       existingClaim:
   # configuration is immich-config.json converted to yaml
   # ref: https://immich.app/docs/install/config-file/
@@ -36,8 +35,7 @@ immich:
     #   enabled: true
     #   template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
 
-# Dependencies
-
+## Dependencies
 postgresql:
   enabled: false
   image:
@@ -65,29 +63,21 @@ redis:
   auth:
     enabled: false
 
-# Immich components
+## Immich components
 server:
   enabled: true
-  image:
-    repository: ghcr.io/immich-app/immich-server
-    pullPolicy: IfNotPresent
+  replicas: 1
+  image: {}
   resources:
     requests:
       cpu: 1500m
       memory: 700Mi
     limits:
       memory: 4000Mi
-  ingress:
-    main:
-      enabled: false
-      annotations:
-        # proxy-body-size is set to 0 to remove the body limit on file uploads
-        nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      hosts:
-        - host: immich.local
-          paths:
-            - path: "/"
-      tls: []
+
+microservices:
+  enabled: false
+  replicas: 0
 
 mlworker:
   enabled: false
