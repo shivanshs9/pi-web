@@ -43,7 +43,8 @@ controllers:
               periodSeconds: 10
               timeoutSeconds: 1
               failureThreshold: 3
-          startup: *serverProbes
+          startup:
+            enabled: false
         resources: {{ toYaml .Values.server.resources | nindent 10 }}
   mlworker:
     enabled: {{ .Values.mlworker.enabled }}
@@ -126,7 +127,7 @@ persistence:
     {{ else if .Values.immich.persistence.library.hostPath }}
     hostPath: {{ .Values.immich.persistence.library.hostPath }}
     {{ else }}
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
     size: {{ default .Values.immich.persistence.library.pvcSize "10Gi" }}
     {{ end }}
   # Cache for ML worker
@@ -135,7 +136,7 @@ persistence:
     enabled: true
     size: 10Gi
     type: {{ .Values.mlworker.persistence.cache.type }}
-    accessMode: ReadWriteMany
+    accessMode: ReadWriteOnce
     advancedMounts:
       mlworker:
         main:

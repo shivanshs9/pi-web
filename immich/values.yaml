@@ -58,3 +58,6 @@ server:
 
 mlworker:
   enabled: true
+  persistence:
+    cache:
+      type: persistentVolumeClaim

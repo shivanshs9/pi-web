@@ -5,6 +5,7 @@ namespace: immich
 
 resources:
   - namespace.yaml
+  - ingress.yaml
 
 generators:
   - generator.yaml
