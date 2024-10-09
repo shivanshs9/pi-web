@@ -31,3 +31,20 @@ zitadel:
   configSecretName: sec-zitadel
 
 replicaCount: 1
+
+metrics:
+  enabled: true
+
+startupProbe:
+  # sometimes startup takes a while,
+  # so there's no point keeping it
+  enabled: false
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/debug/metrics"
+  prometheus.io/port: "8080"
