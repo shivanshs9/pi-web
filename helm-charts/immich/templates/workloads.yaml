@@ -2,6 +2,7 @@
 
 controllers:
   server:
+    enabled: {{ .Values.server.enabled }}
     strategy: RollingUpdate
     revisionHistoryLimit: 10
     annotations:
@@ -14,11 +15,18 @@ controllers:
       prometheus.io/port: "8081,8082"
       {{- end }}
     defaultContainerOptions: &sharedOptions
-      env: {{ .Values.env | toYaml | nindent 8 }}
+      env:
+        {{- if .Values.immich.configuration }}
+        IMMICH_CONFIG_FILE: /config/immich-config.yaml
+        {{- end }}
+        {{ .Values.env | toYaml | nindent 8 }}
     containers:
       main:
         image: {{ mergeOverwrite .Values.server.image .Values.image | toYaml | nindent 10 }}
         env:
+          {{ if .Values.immich.metrics.enabled }}
+          IMMICH_METRICS: true
+          {{ end }}
           IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-%s-mlworker:3003" .Release.Name .Chart.Name }}'
           {{ mergeOverwrite (default .Values.server.env dict) .Values.env | toYaml | nindent 10 }}
         probes:
@@ -30,13 +38,16 @@ controllers:
             spec:
               httpGet:
                 path: /api/server/ping
-                port: http
+                port: 3001
               initialDelaySeconds: 0
               periodSeconds: 10
               timeoutSeconds: 1
               failureThreshold: 3
           startup: *serverProbes
+        resources: {{ toYaml .Values.server.resources | nindent 10 }}
   mlworker:
+    enabled: {{ .Values.mlworker.enabled }}
+    strategy: RollingUpdate
     defaultContainerOptions: *sharedOptions
     revisionHistoryLimit: 10
     containers:
@@ -52,7 +63,7 @@ controllers:
             spec:
               httpGet:
                 path: /ping
-                port: http
+                port: 3003
               initialDelaySeconds: 0
               periodSeconds: 10
               timeoutSeconds: 1
@@ -60,9 +71,11 @@ controllers:
           readiness: *mlworkerProbes
           startup:
             enabled: false
+        resources: {{ toYaml .Values.mlworker.resources | nindent 10 }}
 
 service:
   server:
+    enabled: {{ .Values.server.enabled }}
     controller: server
     type: ClusterIP
     ports:
@@ -80,6 +93,7 @@ service:
         port: 8082
         protocol: HTTP
   mlworker:
+    enabled: {{ .Values.mlworker.enabled }}
     controller: mlworker
     type: ClusterIP
     ports:
@@ -103,8 +117,10 @@ persistence:
     {{ else }}
     type: persistentVolumeClaim
     {{ end }}
-    globalMounts:
-      - path: /usr/src/app/upload
+    advancedMounts:
+      server:
+        main:
+          - path: /usr/src/app/upload
     {{ if .Values.immich.persistence.library.existingClaim }}
     existingClaim: {{ .Values.immich.persistence.library.existingClaim }}
     {{ else if .Values.immich.persistence.library.hostPath }}
@@ -114,17 +130,18 @@ persistence:
     size: {{ default .Values.immich.persistence.library.pvcSize "10Gi" }}
     {{ end }}
   # Cache for ML worker
+  {{ if .Values.mlworker.enabled }}
   cache:
     enabled: true
     size: 10Gi
-    # Optional: Set this to pvc to avoid downloading the ML models every start.
-    type: emptyDir
+    type: {{ .Values.mlworker.persistence.cache.type }}
     accessMode: ReadWriteMany
     advancedMounts:
       mlworker:
         main:
           - path: /cache
     # storageClass: your-class
+  {{ end }}
 {{- end }}
 
 

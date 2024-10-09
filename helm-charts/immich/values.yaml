@@ -67,10 +67,16 @@ redis:
 
 # Immich components
 server:
-  enabled: false
+  enabled: true
   image:
     repository: ghcr.io/immich-app/immich-server
     pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 1500m
+      memory: 700Mi
+    limits:
+      memory: 4000Mi
   ingress:
     main:
       enabled: false
@@ -90,3 +96,13 @@ mlworker:
     pullPolicy: IfNotPresent
   env:
     TRANSFORMERS_CACHE: /cache
+  persistence:
+    cache:
+      # Optional: Set this to "persistentVolumeClaim" to avoid downloading the ML models every start.
+      type: emptyDir
+  resources:
+    requests:
+      cpu: 1500m
+      memory: 700Mi
+    limits:
+      memory: 4000Mi
