@@ -20,6 +20,9 @@ image:
 immich:
   metrics:
     enabled: true
+  configuration:
+    externalDomain: onepiece.shivanshs9.me
+    loginPageMessage: "Google Photos? Ditch 'em corporates and self-host your own photos storage!"
   persistence:
     library:
       hostPath: /mnt/data3/contents/immich
@@ -40,6 +43,10 @@ persistence:
         main:
           - path: /usr/src/app/external/Shivansh
             readOnly: true
+      microservices:
+        main:
+          - path: /usr/src/app/external/Shivansh
+            readOnly: true
 
 server:
   replicas: 1
@@ -48,8 +55,8 @@ server:
       cpu: 200m
       memory: 300Mi
     limits:
-      cpu: 1500m
-      memory: 900Mi
+      cpu: 1200m
+      memory: 700Mi
   # TODO: Remove later after deciding what to use for Traefik
   # ingress:
   #   main:
@@ -66,7 +73,7 @@ microservices:
   replicas: 1
   resources:
     requests:
-      cpu: 1300m
+      cpu: 900m
       memory: 700Mi
     limits:
       memory: 4000Mi
@@ -79,4 +86,3 @@ mlworker:
   resources:
     requests:
       cpu: 200m
-
