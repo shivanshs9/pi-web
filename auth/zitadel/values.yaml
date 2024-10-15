@@ -1,0 +1,50 @@
+zitadel:
+  masterkeySecretName: sec-zitadel
+  configmapConfig:
+    ExternalSecure: true
+    ExternalDomain: auth.shivanshs9.me
+    TLS:
+      Enabled: false
+    Database:
+      Postgres:
+        Host: svc-db-postgres.database.svc
+        Port: 5432
+        Database: zitadel
+        MaxOpenConns: 20
+        MaxIdleConns: 10
+        MaxConnLifetime: 30m
+        MaxConnIdleTime: 5m
+        User:
+          Username: zitadel
+          SSL:
+            Mode: disable
+        Admin:
+          Username: postgres
+          SSL:
+            Mode: disable
+    SMTPConfiguration:
+      SMTP:
+        Host: smtp.sendgrid.net:587
+        User: apikey
+      From: no-reply@shivanshs9.me
+      FromName: Sphinx Pi
+  configSecretName: sec-zitadel
+
+replicaCount: 1
+
+metrics:
+  enabled: true
+
+startupProbe:
+  # sometimes startup takes a while,
+  # so there's no point keeping it
+  enabled: false
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/debug/metrics"
+  prometheus.io/port: "8080"

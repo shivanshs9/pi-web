@@ -3,4 +3,4 @@ kind: ksops
 metadata:
   name: NotImportant
 files:
-  - ./secret.yml
+  - ./secret.yaml

@@ -1,5 +1,1 @@
-## Auth powered by Ory ecosystem!
-
-```bash
-
-```
+## Auth powered by Zitadel ecosystem!
