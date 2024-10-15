@@ -1,0 +1,98 @@
+## This chart relies on the common library chart from bjw-s
+## You can find it at https://github.com/bjw-s/helm-charts/tree/main/charts/library/common
+## Refer there for more detail about the supported values
+
+env:
+  REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
+  DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
+  DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
+  DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
+  # -- You should provide your own secret outside of this helm-chart and use `postgresql.global.postgresql.auth.existingSecret` to provide credentials to the postgresql instance
+  DB_PASSWORD: "{{ .Values.postgresql.global.postgresql.auth.password }}"
+
+image:
+  repository: ghcr.io/immich-app/immich-server
+  pullPolicy: IfNotPresent
+  tag: v1.117.0
+
+immich:
+  metrics:
+    # Enabling this will attach the prometheus annotations needed to monitor immich api + microservices components
+    enabled: true
+  persistence:
+    # Main data store for all photos shared between different components.
+    library:
+      # If you have existing PVC for your library, please mention it here
+      existingClaim:
+  # configuration is immich-config.json converted to yaml
+  # ref: https://immich.app/docs/install/config-file/
+  #
+  configuration: {}
+    # trash:
+    #   enabled: false
+    #   days: 30
+    # storageTemplate:
+    #   enabled: true
+    #   template: "{{y}}/{{y}}-{{MM}}-{{dd}}/{{filename}}"
+
+## Dependencies
+postgresql:
+  enabled: false
+  image:
+    repository: tensorchord/pgvecto-rs
+    tag: pg14-v0.2.0
+  global:
+    postgresql:
+      auth:
+        username: immich
+        database: immich
+        password: immich
+  primary:
+    containerSecurityContext:
+      readOnlyRootFilesystem: false
+    initdb:
+      scripts:
+        create-extensions.sql: |
+          CREATE EXTENSION cube;
+          CREATE EXTENSION earthdistance;
+          CREATE EXTENSION vectors;
+
+redis:
+  enabled: false
+  architecture: standalone
+  auth:
+    enabled: false
+
+## Immich components
+server:
+  enabled: true
+  replicas: 1
+  image: {}
+  resources:
+    requests:
+      cpu: 1500m
+      memory: 700Mi
+    limits:
+      memory: 4000Mi
+
+microservices:
+  enabled: false
+  replicas: 0
+
+mlworker:
+  enabled: false
+  image:
+    repository: ghcr.io/immich-app/immich-machine-learning
+    pullPolicy: IfNotPresent
+  env:
+    TRANSFORMERS_CACHE: /cache
+  persistence:
+    cache:
+      # Optional: Set this to "persistentVolumeClaim" to avoid downloading the ML models every start.
+      type: emptyDir
+  resources:
+    requests:
+      cpu: 1500m
+      memory: 700Mi
+    limits:
+      memory: 4000Mi

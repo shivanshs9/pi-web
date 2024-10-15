@@ -1,0 +1,88 @@
+env:
+  TZ: Asia/Tokyo
+  DB_HOSTNAME: svc-db-postgres.database.svc
+  DB_DATABASE_NAME: immich
+  DB_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: sec-onepiece-immich
+        key: DB_USERNAME
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: sec-onepiece-immich
+        key: DB_PASSWORD
+
+image:
+  # renovate: datasource=github-releases depName=immich-app/immich
+  tag: v1.117.0
+
+immich:
+  metrics:
+    enabled: true
+  configuration:
+    externalDomain: onepiece.shivanshs9.me
+    loginPageMessage: "Google Photos? Ditch 'em corporates and self-host your own photos storage!"
+  persistence:
+    library:
+      hostPath: /mnt/data3/contents/immich
+
+postgresql:
+  enabled: false
+
+redis:
+  enabled: false
+
+persistence:
+  media-shivansh:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/storage/Shivansh
+    advancedMounts:
+      server:
+        main:
+          - path: /usr/src/app/external/Shivansh
+            readOnly: true
+      microservices:
+        main:
+          - path: /usr/src/app/external/Shivansh
+            readOnly: true
+
+server:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 200m
+      memory: 300Mi
+    limits:
+      cpu: 1200m
+      memory: 700Mi
+  # TODO: Remove later after deciding what to use for Traefik
+  # ingress:
+  #   main:
+  #     enabled: false
+  #     annotations:
+  #       # proxy-body-size is set to 0 to remove the body limit on file uploads
+  #       nginx.ingress.kubernetes.io/proxy-body-size: '50000M'
+  #       nginx.ingress.kubernetes.io/proxy-read-timeout: '3600'
+  #       nginx.ingress.kubernetes.io/proxy-send-timeout: '3600'
+  #       kubernetes.io/ingress.class: nginx
+
+microservices:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 900m
+      memory: 700Mi
+    limits:
+      memory: 4000Mi
+
+mlworker:
+  enabled: true
+  persistence:
+    cache:
+      type: persistentVolumeClaim
+  resources:
+    requests:
+      cpu: 200m
