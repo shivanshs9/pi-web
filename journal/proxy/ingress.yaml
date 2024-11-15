@@ -1,0 +1,15 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rt-api-proxy
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`whisper-notes-api.shivanshs9.me`)
+      kind: Rule
+      services:
+        - name: whisper-notes-proxy
+          port: 8443
+  tls:
+    secretName: tls-pi-shivanshs9-me

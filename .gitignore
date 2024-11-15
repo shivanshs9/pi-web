@@ -1,5 +1,5 @@
 .env
-*.ignore.yml
+*.ignore.*
 
 **.tar
 
