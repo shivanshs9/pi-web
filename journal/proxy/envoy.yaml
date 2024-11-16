@@ -29,11 +29,10 @@ static_resources:
               - "*"
               routes:
               - match:
-                  prefix: "/api/"
+                  prefix: "/"
                 route:
                   cluster: notes-grpc-backend
                   max_grpc_timeout: 2s
-                  prefix_rewrite: "/"
               - match:
                   prefix: "/"
                 direct_response:
