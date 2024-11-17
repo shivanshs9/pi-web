@@ -74,7 +74,7 @@ controllers:
         image: {{ merge (default dict .Values.microservices.image) .Values.image | toYaml | nindent 10 }}
         env:
           {{ if .Values.immich.metrics.enabled }}
-          IMMICH_METRICS: true
+          IMMICH_TELEMETRY_INCLUDE: 'all'
           {{ end }}
           IMMICH_WORKERS_EXCLUDE: 'api'
           IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-%s-mlworker:3003" .Release.Name .Chart.Name }}'
