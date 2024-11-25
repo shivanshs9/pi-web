@@ -47,6 +47,19 @@ persistence:
         main:
           - path: /usr/src/app/external/Shivansh
             readOnly: true
+  media-wang:
+    enabled: true
+    type: hostPath
+    hostPath: /mnt/storage/Wang
+    advancedMounts:
+      server:
+        main:
+          - path: /usr/src/app/external/Wang
+            readOnly: true
+      microservices:
+        main:
+          - path: /usr/src/app/external/Wang
+            readOnly: true
 
 server:
   replicas: 1
