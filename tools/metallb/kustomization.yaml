@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: metallb-system
 
 resources:
-  - https://github.com/metallb/metallb//config/frr?ref=v0.14
+  - https://github.com/metallb/metallb//config/frr?ref=v0.14.9
   - metallb-private-ippool.yml
   - metallb-mesh-ippool.yml
 

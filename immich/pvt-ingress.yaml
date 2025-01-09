@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: onepiece-immich-private
+  annotations:
+    metallb.universe.tf/address-pool: "private-ips"
+    external-dns.alpha.kubernetes.io/hostname: "photos.pi."
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 2283
+      name: http
+  selector:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: onepiece
+    app.kubernetes.io/name: immich

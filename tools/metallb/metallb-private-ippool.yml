@@ -13,3 +13,6 @@ kind: L2Advertisement
 metadata:
   name: private-layer2
   namespace: metallb-system
+spec:
+  ipAddressPools:
+    - private-ips
