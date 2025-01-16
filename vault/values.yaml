@@ -2,10 +2,16 @@ nameOverride: server
 
 image:
   repository: vaultwarden/server
-  tag: 1.32.0-alpine
+  tag: 1.32.7-alpine
+
+replicas: 1
 
 service:
   port: 8080
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
 
 domain: https://vault.shivanshs9.me
 
@@ -13,7 +19,8 @@ adminToken:
   existingSecret: sec-vault
   existingSecretKey: admin_token
 
-bitwarden:
+pushNotifications:
+  enabled: true
   existingSecret: sec-vault
   installationId:
     existingSecretKey: installation_id
@@ -38,13 +45,15 @@ smtp:
   authMechanism: "Login"
 
 signupsAllowed: true
-signupDomains: shivanshs9.me,iitbhu.ac.in
+signupDomains: shivanshs9.me
+
+domain: https://vault.shivanshs9.me
 
 resources:
   requests:
     cpu: 50m
     memory: 50Mi
-  limit:
+  limits:
     cpu: 100m
     memory: 100Mi
 
@@ -53,5 +62,15 @@ ingress:
 
 storage:
   enabled: true
-  size: "1Gi"
-  class: "local-path-retain"
+  data:
+    name: data
+    size: "1Gi"
+    class: "local-path-retain"
+    accessMode: "ReadWriteOnce"
+    keepPvc: "true"
+  attachments:
+    name: attachments
+    size: "1Gi"
+    class: "local-path-retain"
+    accessMode: "ReadWriteOnce"
+    keepPvc: "true"

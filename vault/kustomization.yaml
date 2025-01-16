@@ -13,8 +13,8 @@ generators:
 helmCharts:
   - name: vaultwarden
     releaseName: vaultwarden
-    repo: http://shivanshs9.me/vaultwarden/
-    version: 0.15.0
+    repo: http://guerzon.github.io/vaultwarden/
+    version: 0.31.1
     valuesFile: values.yaml
 
 # patches:
