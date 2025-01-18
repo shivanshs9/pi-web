@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: onepiece-immich-private
   annotations:
-    metallb.universe.tf/address-pool: "private-ips"
+    metallb.io/address-pool: "private-ips"
     external-dns.alpha.kubernetes.io/hostname: "photos.pi."
 spec:
   type: LoadBalancer
