@@ -2,7 +2,7 @@ nameOverride: server
 
 image:
   repository: vaultwarden/server
-  tag: 1.33.0-alpine
+  tag: 1.33.1-alpine
 
 replicas: 1
 
