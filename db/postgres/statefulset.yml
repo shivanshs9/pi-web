@@ -10,7 +10,9 @@ spec:
         - name: app
           # Using https://hub.docker.com/r/tensorchord/pgvecto-rs
           # for vector similarity search in postgresql
-          image: tensorchord/pgvecto-rs:pg15-v0.3.0
+          # image: tensorchord/pgvecto-rs:pg15-v0.3.0
+          # image: ghcr.io/immich-app/postgres:15-vectorchord0.4.2-pgvectors0.3.0
+          image: ghcr.io/immich-app/postgres:15-vectorchord0.4.3
           ports:
             - containerPort: 5432
           env:

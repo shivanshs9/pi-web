@@ -31,6 +31,8 @@ spec:
                     secretKeyRef:
                       key: POSTGRES_PASSWORD
                       name: sec-db-postgres
+                - name: TZ
+                  value: Asia/Tokyo
               resources:
                 limits:
                   memory: 256Mi
