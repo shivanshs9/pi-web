@@ -92,18 +92,18 @@ controllers:
           TRANSFORMERS_CACHE: /cache
           {{ merge (default dict .Values.mlworker.env) .Values.env | toYaml | nindent 10 }}
         probes:
-          liveness: &mlworkerProbes
+          readiness: &mlworkerProbes
             enabled: true
             custom: true
             spec:
               httpGet:
                 path: /ping
                 port: 3003
-              initialDelaySeconds: 0
+              initialDelaySeconds: 30
               periodSeconds: 10
               timeoutSeconds: 1
-              failureThreshold: 3
-          readiness: *mlworkerProbes
+              failureThreshold: 5
+          # liveness: *mlworkerProbes
           startup:
             enabled: false
         resources: {{ toYaml .Values.mlworker.resources | nindent 10 }}
