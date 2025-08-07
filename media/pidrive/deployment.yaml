@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pidrive
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: copyparty
+          image: ghcr.io/9001/copyparty-ac:1.18.10
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TZ
+              value: "Asia/Tokyo"
+            - name: LD_PRELOAD
+              value: /usr/lib/libmimalloc-secure.so.2
+          ports:
+            - containerPort: 3923
+              protocol: TCP
+              name: http
+          volumeMounts:
+            - name: configs
+              mountPath: /cfg
+            - name: nas-pidrive
+              mountPath: /w/pidrive
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 150m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+      volumes:
+        - name: configs
+          configMap:
+            name: cm-copyparty
+        - name: nas-pidrive
+          hostPath:
+            path: /mnt/pidrive/
+            type: Directory

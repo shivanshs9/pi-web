@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: svc-pidrive
+spec:
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 3923
+      name: http
