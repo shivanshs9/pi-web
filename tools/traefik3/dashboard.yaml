@@ -1,0 +1,23 @@
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   annotations:
+#     helm.sh/hook: post-install,post-upgrade
+#     meta.helm.sh/release-name: traefik
+#     meta.helm.sh/release-namespace: traefik
+#   labels:
+#     app.kubernetes.io/instance: traefik-traefik
+#     app.kubernetes.io/managed-by: Helm
+#     app.kubernetes.io/name: traefik
+#     helm.sh/chart: traefik-19.0.3
+#   name: traefik-dashboard
+#   namespace: traefik
+# spec:
+#   entryPoints:
+#   - traefik
+#   routes:
+#   - kind: Rule
+#     match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+#     services:
+#     - kind: TraefikService
+#       name: api@internal
