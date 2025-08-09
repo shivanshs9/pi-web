@@ -6,6 +6,11 @@ spec:
   entryPoints:
     - websecure
   routes:
+    - match: Host(`auth.shivanshs9.me`) && PathPrefix(`/ui/v2/login`)
+      kind: Rule
+      services:
+        - name: zitadel-login
+          port: http-server
     - match: Host(`auth.shivanshs9.me`)
       kind: Rule
       services:

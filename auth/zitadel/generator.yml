@@ -4,3 +4,4 @@ metadata:
   name: NotImportant
 files:
   - ./secret.yaml
+  - ./sec-login-client.yaml

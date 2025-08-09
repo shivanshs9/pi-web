@@ -32,6 +32,9 @@ zitadel:
 
 replicaCount: 1
 
+login:
+  enabled: true
+
 metrics:
   enabled: true
 
