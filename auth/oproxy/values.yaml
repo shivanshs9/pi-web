@@ -12,7 +12,6 @@ config:
     reverse_proxy = true
 
     provider = "oidc"
-    user_id_claim = "name"
     provider_display_name = "Sphinx"
     redirect_url = "https://oproxy.shivanshs9.me/oauth2/callback"
     oidc_issuer_url = "https://auth.shivanshs9.me"
