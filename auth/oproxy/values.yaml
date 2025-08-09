@@ -1,0 +1,49 @@
+ingress:
+  enabled: false
+
+replicaCount: 1
+
+# pick up client_id, client_secret & cookie_secret from .Values.extraEnv
+proxyVarsAsSecrets: false
+config:
+  configFile: |-
+    # return authenticated user to traefik's forwardAuth
+    set_xauthrequest = true
+    reverse_proxy = true
+
+    provider = "oidc"
+    user_id_claim = "sub"
+    provider_display_name = "Sphinx"
+    redirect_url = "https://oproxy.shivanshs9.me/oauth2/callback"
+    oidc_issuer_url = "https://auth.shivanshs9.me"
+    upstreams = [ "static://202" ]
+    email_domains = [ "*" ]
+    cookie_domains = [ ".shivanshs9.me" ]
+    whitelist_domains = [ ".shivanshs9.me" ]
+    pass_access_token = true
+    # client_id
+    # client_secret
+    # cookie_secret
+    skip_provider_button = true
+    cookie_secure = true
+    http_address = "0.0.0.0:4180"
+
+    oidc_groups_claim = "my:zitadel:grants"
+    # allowed_groups = [ "" ]
+
+extraEnv:
+  - name: OAUTH2_PROXY_CLIENT_ID
+    valueFrom:
+      secretKeyRef:
+        name: sec-oauth2-proxy
+        key: OAUTH2_PROXY_CLIENT_ID
+  - name: OAUTH2_PROXY_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: sec-oauth2-proxy
+        key: OAUTH2_PROXY_CLIENT_SECRET
+  - name: OAUTH2_PROXY_COOKIE_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: sec-oauth2-proxy
+        key: OAUTH2_PROXY_COOKIE_SECRET

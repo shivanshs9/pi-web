@@ -6,6 +6,15 @@ spec:
   replicas: 1
   template:
     spec:
+      initContainers:
+        - name: init-configs
+          image: busybox
+          command: ["sh", "-c", "cp /cm-configs/* /cfg"]
+          volumeMounts:
+            - name: configs
+              mountPath: /cfg
+            - name: cm-configs
+              mountPath: /cm-configs
       containers:
         - name: copyparty
           image: ghcr.io/9001/copyparty-ac:1.18.10
@@ -13,8 +22,6 @@ spec:
           env:
             - name: TZ
               value: "Asia/Tokyo"
-            - name: LD_PRELOAD
-              value: /usr/lib/libmimalloc-secure.so.2
           ports:
             - containerPort: 3923
               protocol: TCP
@@ -31,11 +38,20 @@ spec:
             limits:
               memory: 512Mi
               cpu: 500m
+          readinessProbe:
+            httpGet:
+              path: /?reset=/._
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            failureThreshold: 3
       volumes:
-        - name: configs
+        - name: cm-configs
           configMap:
             name: cm-copyparty
         - name: nas-pidrive
           hostPath:
-            path: /mnt/pidrive/
+            path: /mnt/pidrive
             type: Directory
+        - name: configs
+          emptyDir: {}

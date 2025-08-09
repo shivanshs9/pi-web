@@ -1,18 +1,15 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: pidrive
+  name: oproxy-public
 spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`pidrive.shivanshs9.me`)
+    - match: Host(`oproxy.shivanshs9.me`)
       kind: Rule
       services:
-        - name: svc-pidrive
+        - name: oproxy-oauth2-proxy
           port: http
-      middlewares:
-        - name: oproxy-auth-auto-redirect
-          namespace: auth
   tls:
     secretName: tls-pi-shivanshs9-me
