@@ -1,4 +1,21 @@
 apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: ignore-auth-errors
+spec:
+  errors:
+    status:
+      - "401-403"
+    statusRewrites:
+      "401-403": 200
+    service:
+      # name: test-httpbin
+      name: svc-pidrive
+      port: http
+    query: "{url}"
+
+---
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: pidrive
@@ -13,6 +30,20 @@ spec:
           port: http
       middlewares:
         - name: oproxy-auth-auto-redirect
+          namespace: auth
+    - match: Host(`pidrive.shivanshs9.me`) && PathPrefix(`/.cpr`)
+      kind: Rule
+      services:
+        - name: svc-pidrive
+          port: http
+    - match: Host(`pidrive.shivanshs9.me`) && PathPrefix(`/public`)
+      kind: Rule
+      services:
+        - name: svc-pidrive
+          port: http
+      middlewares:
+        # - name: ignore-auth-errors
+        - name: oproxy-auth
           namespace: auth
   tls:
     secretName: tls-pi-shivanshs9-me
