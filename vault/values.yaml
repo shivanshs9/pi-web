@@ -2,7 +2,7 @@ nameOverride: server
 
 image:
   repository: vaultwarden/server
-  tag: 1.34.3-alpine
+  tag: 1.35.1-alpine
 
 replicas: 1
 
@@ -34,20 +34,18 @@ database:
 
 smtp:
   existingSecret: sec-vault
-  host: smtp.sendgrid.net
+  host: smtp.resend.com
   port: 587
   from: no-reply@shivanshs9.me
   fromName: "Vault Admin"
   username:
     existingSecretKey: smtp_username
   password:
-    existingSecretKey: sendgrid_key
+    existingSecretKey: resend_key
   authMechanism: "Login"
 
 signupsAllowed: true
 signupDomains: shivanshs9.me
-
-domain: https://vault.shivanshs9.me
 
 resources:
   requests:
