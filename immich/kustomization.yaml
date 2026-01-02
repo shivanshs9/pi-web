@@ -13,8 +13,12 @@ generators:
 
 helmCharts:
   - name: immich
+    # kustomize v5.8.0 bugged kustomize's namespace transformer for helm charts:
+    # https://github.com/kubernetes-sigs/kustomize/issues/6014
+    # Using Helm release namespace required updating common library chart to v4+
+    namespace: immich
     releaseName: onepiece
-    version: 1.0.0
+    version: 1.1.0
     valuesFile: values.yaml
 
 helmGlobals:

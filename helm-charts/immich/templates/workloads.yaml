@@ -2,6 +2,9 @@
 
 {{- $isMicroservicesEnabled := and .Values.microservices.enabled .Values.microservices.replicas -}}
 
+global:
+  alwaysAppendIdentifierToResourceName: true
+
 controllers:
   server:
     enabled: {{ .Values.server.enabled }}
