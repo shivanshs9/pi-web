@@ -3,7 +3,7 @@
 ## Refer there for more detail about the supported values
 
 env:
-  REDIS_HOSTNAME: '{{ printf "%s-redis-master" .Release.Name }}'
+  REDIS_HOSTNAME: '{{ printf "%s-valkey-primary" .Release.Name }}'
   DB_HOSTNAME: "{{ .Release.Name }}-postgresql"
   DB_USERNAME: "{{ .Values.postgresql.global.postgresql.auth.username }}"
   DB_DATABASE_NAME: "{{ .Values.postgresql.global.postgresql.auth.database }}"
@@ -57,13 +57,15 @@ postgresql:
           CREATE EXTENSION earthdistance;
           CREATE EXTENSION vectors;
 
-redis:
+valkey:
   enabled: false
   architecture: standalone
   auth:
     enabled: false
   master:
     resourcesPreset: "micro"
+  # image:
+  #   tag: 9.0.1
 
 ## Immich components
 server:

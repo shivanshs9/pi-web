@@ -5,8 +5,8 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 16.0.0
-- name: redis
+- name: valkey
   repository: https://charts.bitnami.com/bitnami
-  version: 20.1.7
-digest: sha256:4d94655bdcd7fef4c94ca467050bd427186c24e9ac72c13f5f79e32a8a977c5e
-generated: "2026-01-02T22:58:24.797061175+09:00"
+  version: 5.1.2
+digest: sha256:fa1a9dc6ec5a8265f2bd655e0d4933cc5017b82cbad8b59e1513acf581ce0d82
+generated: "2026-01-27T01:30:21.581198053+09:00"

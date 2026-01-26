@@ -19,9 +19,9 @@ dependencies:
     condition: postgresql.enabled
     repository: https://charts.bitnami.com/bitnami
     version: 16.0.0
-  - name: redis
-    condition: redis.enabled
+  - name: valkey
+    condition: valkey.enabled
     repository: https://charts.bitnami.com/bitnami
-    version: 20.1.7
+    version: 5.1.2
 annotations:
   artifacthub.io/category: storage

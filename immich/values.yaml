@@ -30,7 +30,7 @@ immich:
 postgresql:
   enabled: false
 
-redis:
+valkey:
   enabled: true
 
 persistence:
