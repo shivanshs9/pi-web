@@ -2,6 +2,7 @@ env:
   TZ: Asia/Tokyo
   DB_HOSTNAME: svc-db-postgres.database.svc
   DB_DATABASE_NAME: immich
+  IMMICH_HELMET_FILE: true
   DB_USERNAME:
     valueFrom:
       secretKeyRef:
@@ -15,7 +16,7 @@ env:
 
 image:
   # renovate: datasource=github-releases depName=immich-app/immich
-  tag: v2.4.1
+  tag: v2.7.5
 
 immich:
   metrics:
@@ -25,7 +26,7 @@ immich:
     loginPageMessage: "Google Photos? Ditch 'em corporates and self-host your own photos storage!"
   persistence:
     library:
-      hostPath: /mnt/data3/contents/immich
+      hostPath: /mnt/storage/immich
 
 postgresql:
   enabled: false

@@ -14,5 +14,8 @@ helmCharts:
   - name: zitadel
     releaseName: zitadel
     repo: https://charts.zitadel.com
-    version: 9.0.0
+    version: 9.32.0
     valuesFile: values.yaml
+
+patches:
+  - path: patch-login-probe.yaml 
